@@ -3,7 +3,8 @@
 
 using std::cout;
 using std::endl;
-using std::string;
+using std::to_string;
+
 
 /*
 Will visit each vertex and add neighbors to its neighborlist
@@ -51,23 +52,37 @@ void Graph::addEdge(int index, Vertex* v){
 }
 
 void Graph::removeEdge(int index, Vertex* v){
+	if (vertices.at(index).empty())
+		cout << "Cannot remove, is already empty." << endl;
+	else{
+		iter = vertices.at(index).begin();
+		while (iter != vertices.at(index).end()){
+
+			if (*iter == v)
+				vertices.at(index).erase(iter);
+			
+			++iter;
+		}
+	}
 
 }
 
 
 string Graph::printNeighbors(int index){
-	iter = vertices.at(index).begin();
-	string list;
-	while (iter != vertices.at(index).end()){
-		list.append(*iter);
+	string list = " ";
 
-		++iter;
+	for (int i = 1; i < vertices.at(index).size(); i++){
+		list += to_string(vertices.at(index).at(i)->getIdnty());
+		list += ", ";
 	}
+	return list;
 }
 
 void Graph::printGraph(){
 	for (int i = 0; i < totalVertices; i++)
-		cout << vertices.at(i).front()->getIdnty() << ":    <" << printNeighbors(i) << ">" << endl;
+		cout << to_string(vertices.at(i).front()->getIdnty()) << ":    <" << printNeighbors(i) << ">" << endl;
 }
 
-
+int Graph::coordToIndex(int x, int y){
+	return (x + 1)*x + y;
+}

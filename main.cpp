@@ -11,6 +11,8 @@
 int main(){
 	Graph g(9);
 	g.build();
+	g.printGraph();
+	//g.addEdge()
 
 	return 0;
 }
