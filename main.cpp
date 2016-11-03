@@ -7,7 +7,6 @@
 
 
 
-
 int main(){
 	Graph grid(9);
 	grid.build();

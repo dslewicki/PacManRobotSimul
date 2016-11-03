@@ -58,11 +58,12 @@ void Graph::removeEdge(int index, Vertex* v){
 	else{
 		iter = vertices.at(index).begin();
 		while (iter != vertices.at(index).end()){
-
+			//move iterator so isnt lost at deletion
 			if (*iter == v)
-				vertices.at(index).erase(iter);
+				iter = vertices.at(index).erase(iter);
 			
-			advance(iter, 1);
+			else
+				++iter;//advance(iter, 1);
 		}
 	}
 
@@ -85,5 +86,5 @@ void Graph::printGraph(){
 }
 
 void Graph::test(){
-	removeEdge(coordToIndex(2, 2, keynum), vertices.at(7).back());
+	removeEdge(coordToIndex(2, 2, keynum), vertices.at(8).back());
 }
