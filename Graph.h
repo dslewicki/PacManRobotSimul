@@ -2,6 +2,8 @@
 #include "Entities.h"
 #include <iterator>
 #include <string>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 /*
 Graph will be represented as an adjacency list,
 using std::vector, and possibly std::map, depending on
@@ -21,7 +23,7 @@ using std::vector;
 using std::string;
 
 class Vertex{
-	SuperPac *val;//set to null if there exists no entity in this space
+	Entity *val;//set to null if there exists no entity in this space
 	//Dot *dot;  //used to check if there is a dot
 	int idnty;  //used for testing graph
 
@@ -30,7 +32,10 @@ public:
 		//neighbors=new vector<Vertex>
 
 	//called during build
+	//idnty constructor for adjacency list
 	Vertex(int x) : val(NULL), idnty(x){}
+
+	Vertex(Entity* ent,int x) : val(ent), idnty(x){}
 
 	~Vertex(){
 		delete val;
@@ -84,7 +89,10 @@ public:
 
 	void removeEdge(int, Vertex*);  //given a vertex index and a vertex to be removed
 	void BFS();  //breadth-first search, might be adjusted to accommodate for more general distance appromixation
-	void printGraph();//prints out the graph in console
+	void printAdjList(); //prints adjacency list in console
+	void printGrid();//prints out the graph in opengl
+	void printGridLine();//assists in initprintGrid
+
 	string printNeighbors(int);//prints out a vertex's neighbors  (decided against overloading <<, as that would been cancer)
 	void test();  //runs a test on the graph
 };

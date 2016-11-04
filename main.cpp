@@ -1,18 +1,14 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 //^used to draw nice things
 #include "Graph.h"
 
 
 
 
-
 int main(){
-	Graph grid(9);
+	//GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
+	Graph grid(100);
 	grid.build();
-	grid.printGraph();
-	grid.test();
-	grid.printGraph();
-
+	grid.printAdjList();
+	grid.printGrid();
 	return 0;
 }

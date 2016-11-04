@@ -21,6 +21,8 @@ void Graph::build(){
 		addNeighbors(i);
 }
 
+
+//ADD TRY CATCH TO ONLY ALLOW SQUARABLE INTS
 void Graph::addNeighbors(int index){//0-99
 	//sqrt of Vertices are the "new rows" EX: Of 9 vertices, the beginning index of each row is 0,3,6
 	//Eg. 3x3, 0,3,6 are the first indices in their row
@@ -69,7 +71,6 @@ void Graph::removeEdge(int index, Vertex* v){
 
 }
 
-
 string Graph::printNeighbors(int index){
 	string list = " ";
 
@@ -80,11 +81,44 @@ string Graph::printNeighbors(int index){
 	return list;
 }
 
-void Graph::printGraph(){
+void Graph::printAdjList(){
 	for (int i = 0; i < totalVertices; i++)
 		cout << to_string(vertices.at(i).front()->getIdnty()) << ":    <" << printNeighbors(i) << ">" << endl;
+	cout << "--------------------------  \n";
+}
+
+void Graph::printGridLine(){
+		cout << endl;
+		for (int x = 0; x <= keynum; x++) {
+			cout << "   | ";
+		}
+		cout << endl;
+		for (int x = 0; x <= keynum; x++) {
+			cout << "---| ";
+		}
+		cout << endl;
+}
+
+void Graph::printGrid(){
+		int row = 0;
+		cout << endl << "TEST GRID:" << endl << endl;
+		for (int r = 0; r <= keynum; r++) {
+			for (int c = 0; c <= keynum; c++) {
+				if ((r == 0) && (c != 0))
+					cout << " " << c - 1 << " | ";
+				else if ((c == 0) && (r != 0)){
+					row = row + r - 1;
+					cout << " " << row << " | ";
+					row = row - r + 1;
+				}
+				else cout << " " << " " << " | ";
+			}
+			printGridLine();
+		}
+		cout << endl << endl;
+	
 }
 
 void Graph::test(){
-	removeEdge(coordToIndex(2, 2, keynum), vertices.at(8).back());
+	addEdge(coordToIndex(2, 0, keynum), vertices.at(0).back());
 }

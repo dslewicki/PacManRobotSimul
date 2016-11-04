@@ -6,23 +6,26 @@ Ghost will be a subclass of SuperPac, as only one variable is being modified
 
 
 
-class SuperPac{
+class Entity{
 	//more functions will be implemented as time progresses
-	char col; //will be used to represent entity as a colored object
-	int posX;
-	int posY;
-	bool hostile;
+	char symbol; //will be used to represent entity as a symbol
+	int posX, posY, pntVal;
+	bool eatable;
 
 public:
-	SuperPac(int x, int y): col('y'), posX(x), posY(y), hostile(false){}
+	Entity(): symbol(' '), posX(0), posY(0), pntVal(0), eatable(false){}
 
-protected:
-	
+
 };
 
-class Ghost : public SuperPac{
+class Dot : public Entity{
 	
 public:
+	Dot(int x, int y){
+		
+	}
+};
 
+class PwrDot : public Dot{
 
 };
