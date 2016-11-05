@@ -1,7 +1,9 @@
 /*
-Basic entity is the robot, which is named SuperPac
-Ghost will be a subclass of SuperPac, as only one variable is being modified
-
+LIST OF ALL ENTITIES:
+-GHOSTSES
+-SUPERPAC
+-DOT
+-SUPERDOT
 */
 
 
@@ -14,18 +16,37 @@ class Entity{
 
 public:
 	Entity(): symbol(' '), posX(0), posY(0), pntVal(0), eatable(false){}
+	Entity(char s, int x, int y, int pv, bool eat) : symbol(s), posX(x), posY(y), pntVal(pv), eatable(eat){}
+	char getSymbol()					{ return symbol; };
+	int getPosX()						{ return posX; };
+	int getPosY()						{ return posY; };
+	int getPntVal()						{ return pntVal; };
+	bool isEatable()					{ return eatable; };
 
-
+	void setSymbol(char val)			{ symbol = val;  };
+	void setPosX(int val)				{ posX = val;  };
+	void setPosY(int val)				{ posY = val;  };
+	void setPntVal(int val)				{ pntVal = val;  };
+	void setEatable(bool val)			{ eatable = val;  };
 };
 
 class Dot : public Entity{
 	
 public:
-	Dot(int x, int y){
-		
+	Dot() :Entity(){ 
+		setSymbol('*');
+		setEatable(true);
+		setPntVal(10);
 	}
+	Dot(int x, int y) :Entity('*', x, y, 10, true){}	
 };
 
-class PwrDot : public Dot{
+class PwrPlt : public Dot{
+
+};
+
+
+class SuperPac :public Entity{
+public:
 
 };

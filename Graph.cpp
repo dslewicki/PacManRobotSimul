@@ -22,8 +22,8 @@ void Graph::build(){
 }
 
 
-//ADD TRY CATCH TO ONLY ALLOW SQUARABLE INTS
-void Graph::addNeighbors(int index){//0-99
+
+void Graph::addNeighbors(int index){ //connects tile(index) to its neighbors
 	//sqrt of Vertices are the "new rows" EX: Of 9 vertices, the beginning index of each row is 0,3,6
 	//Eg. 3x3, 0,3,6 are the first indices in their row
 
@@ -86,8 +86,8 @@ void Graph::printAdjList(){
 		cout << to_string(vertices.at(i).front()->getIdnty()) << ":    <" << printNeighbors(i) << ">" << endl;
 	cout << "--------------------------  \n";
 }
-
-void Graph::printGridLine(){
+/*
+void Graph::printGridSquare(){
 		cout << endl;
 		for (int x = 0; x <= keynum; x++) {
 			cout << "   | ";
@@ -118,7 +118,7 @@ void Graph::printGrid(){
 		cout << endl << endl;
 	
 }
-
+*/
 void Graph::test(){
 	addEdge(coordToIndex(2, 0, keynum), vertices.at(0).back());
 }

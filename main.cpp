@@ -1,14 +1,20 @@
-//^used to draw nice things
 #include "Graph.h"
+#include <iostream>
 
+using std::cout;
 
 
 
 int main(){
-	//GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
-	Graph grid(100);
+
+	Entity e= Entity('s', 4, 6, );
+	cout << e.isEatable();
+
+
+
+	/*Graph grid(9);
 	grid.build();
 	grid.printAdjList();
-	grid.printGrid();
+	grid.printGrid();*/
 	return 0;
 }
