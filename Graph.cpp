@@ -9,10 +9,46 @@ using std::to_string;
 
 void Tile::setNeighbor(Tile* t, char dir) {
 	int test = tolower(dir);
-	if (test != 'u' && test != 'd' && test != 'l' && test != 'r')
+	if (test != 'u' && test != 'd' && test != 'l' && test != 'r')//must be correct input
 		cout << "Failed to set neighbor, must enter one of the following directions: u(up), d(down), l(left), r(right)" << endl;
 
 	else {
+		if (t == NULL) {//if wanting to remove, check to see if tile is in neighbors before removal
+			if (neighbors.empty())
+				cout << "Already empty" << endl;
+
+			else {
+
+				//find out which one to remove exactly
+				if (test == 'u')
+					t=getUp();
+				if (test == 'd')
+					t=getDown();
+				if (test == 'l')
+					t=getLeft();
+				if (test == 'r')
+					t=getRight();
+
+				if (t == NULL)//if trying to remove a tile that doesnt exist, dont
+					cout << "Tile does not exist, cannot remove" << endl;
+
+				else {//begin search thru vector to remove that tile			
+					iter = neighbors.begin();
+					while (iter != neighbors.end()) {
+						if (*iter == t)
+							iter = neighbors.erase(iter);
+						else
+							++iter;
+					}
+				}
+			}
+		}//done removal
+
+		else {//wanting to insert
+			neighbors.push_back(t);
+		}//done insert
+
+		//adjust the pointers
 		if (test == 'u')
 			setUp(t);
 		if (test == 'd')
@@ -22,34 +58,43 @@ void Tile::setNeighbor(Tile* t, char dir) {
 		if (test == 'r')
 			setRight(t);
 	}
+
 }
 
-string Tile::getNeighbors() {
-	string neighbors = to_string(getIndex())+": <";
+string Tile::getStrNeighbors() {
+	string output = to_string(getIndex())+": <";
 
 	if(getUp()==NULL)
-		neighbors += "Up: None |";	
+		output += "Up: None |";	
 	else
-		neighbors += "Up: " + to_string(getUp()->getIndex())+" |";
+		output += "Up: " + to_string(getUp()->getIndex())+" |";
 
 	if (getDown() == NULL)
-		neighbors += "Down: None |";
+		output += "Down: None |";
 	else
-		neighbors += "Down: " + to_string(getDown()->getIndex())+" |";
+		output += "Down: " + to_string(getDown()->getIndex())+" |";
 
 	if (getLeft() == NULL)
-		neighbors += "Left: None |";
+		output += "Left: None |";
 	else
-		neighbors += "Left: " + to_string(getLeft()->getIndex())+" |";
+		output += "Left: " + to_string(getLeft()->getIndex())+" |";
 
 	if (getRight() == NULL)
-		neighbors += "Right: None |";
+		output += "Right: None |";
 	else
-		neighbors += "Right: " + to_string(getRight()->getIndex())+" |";
+		output += "Right: " + to_string(getRight()->getIndex())+" |";
 
-	neighbors += ">";
+	output += ">   ";
 
-	return neighbors;
+	//now add the vector to the output
+	string vect = "   |||   <";
+	for (int i = 0; i < getNeighbors().size(); i++) {
+		vect += to_string(getNeighbors().at(i)->getIndex())+", ";
+	}
+	vect += ">";
+	output += vect;
+
+	return output;
 }
 
 void Map::meetNGreet(){
@@ -58,9 +103,9 @@ void Map::meetNGreet(){
 }
 
 
-void Map::visitNeighbors(int index) {
+void Map::visitNeighbors(int index) { //connects all the tiles to their respective neighbors, map is assumed wall-less at first
 	Tile* temp;
-
+	
 	if (index > sqrtOfTiles - 1) {
 		temp = &tiles.at(index - sqrtOfTiles);
 		addNeighbor(index, temp,'u');
@@ -99,11 +144,10 @@ void Map::removeNeighbor(int index, char dir){
 
 void Map::printAdjList(){
 	for (int i = 0; i < totalTiles; i++)
-		cout << tiles.at(i).getNeighbors() << endl;
+		cout << tiles.at(i).getStrNeighbors() << endl;
 	cout << "--------------------------  \n";
 }
 
-void Map::test(){
-	cout << indexToRownum(3, 4) << "  "<<indexToColnum(3, 4);
-	//removeNeighbor(coordToIndex(2, 0, sqrtOfTiles), &tiles.at(3));
+void Map::test(){//put test functions in here
+	removeNeighbor(coordToIndex(2, 0, sqrtOfTiles), 'd');
 }

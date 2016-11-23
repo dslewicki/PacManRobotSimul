@@ -1,3 +1,7 @@
+/*
+Contains info about the Pacman, Ghost, Dots, Powerups
+*/
+
 
 class Entity{
 	char clr; 

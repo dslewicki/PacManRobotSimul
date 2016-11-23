@@ -19,13 +19,15 @@ class Tile{
 	Tile* down;
 	Tile* left;
 	Tile* right;
+	vector<Tile*> neighbors;
+	vector<Tile*>::iterator iter;  //navigates thru the vector
 
 public:
 	Tile(int index):indexVal(index) {}
 	Tile(Entity* ent,int index) : val(ent), indexVal(index){} //will be used when entities are ready
 
 	int getIndex() { return indexVal; }
-	//vector<Tile*> getNeighbors(){}
+	vector<Tile*> getNeighbors() { return neighbors; }
 
 	Tile* getUp()		{ return up; }
 	Tile* getDown()		{ return down; }
@@ -38,7 +40,7 @@ public:
 	void setRight(Tile* t) { right = t; }
 
 	void setNeighbor(Tile*, char);
-	string getNeighbors();
+	string getStrNeighbors();
 	//void removeNeighbor(Tile*, char);
 };
 
@@ -46,7 +48,6 @@ class Map{
 	int totalTiles;
 	int sqrtOfTiles;  //effectively the length/width of the grid, this will be used in all sorts of calculations
 	vector<Tile> tiles;
-
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
 
 public://the constructor sets up each tile, but does not "connect" them (no neighbors detected)
@@ -63,9 +64,9 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void addNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
 	void removeNeighbor(int, char); //which direction should i cut off?
 
-	void BFS();  
-	void printAdjList();
-	void printMap();
+	void BFS();  //finds the shortest path to wherever
+	void printAdjList();  //prints out the adjacency list
+	void printMap(); //will be used in the gui(?)
 
-	void test();  
+	void test();  //just a function for testing
 };
