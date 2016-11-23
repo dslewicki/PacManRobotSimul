@@ -1,28 +1,55 @@
 #include "Graph.h"
 #include <iostream>
 #include "coordindex.h"
+#include <ctype.h>
 
 using std::cout;
 using std::endl;
 using std::to_string;
 
+void Tile::setNeighbor(Tile* t, char dir) {
+	int test = tolower(dir);
+	if (test != 'u' && test != 'd' && test != 'l' && test != 'r')
+		cout << "Failed to set neighbor, must enter one of the following directions: u(up), d(down), l(left), r(right)" << endl;
 
-void Tile::addNeighbor(Tile* t) {
-	neighbors.push_back(t);
+	else {
+		if (test == 'u')
+			setUp(t);
+		if (test == 'd')
+			setDown(t);
+		if (test == 'l')
+			setLeft(t);
+		if (test == 'r')
+			setRight(t);
+	}
 }
 
-void Tile::removeNeighbor(Tile* t) {
-	if (neighbors.empty())
-		cout << "Cannot remove, is already empty." << endl;
-	else {
-		iter = neighbors.begin();
-		while (iter != neighbors.end()) {
-			if (*iter == t)
-				iter = neighbors.erase(iter);
-			else
-				++iter;
-		}
-	}
+string Tile::getNeighbors() {
+	string neighbors = to_string(getIndex())+": <";
+
+	if(getUp()==NULL)
+		neighbors += "Up: None |";	
+	else
+		neighbors += "Up: " + to_string(getUp()->getIndex())+" |";
+
+	if (getDown() == NULL)
+		neighbors += "Down: None |";
+	else
+		neighbors += "Down: " + to_string(getDown()->getIndex())+" |";
+
+	if (getLeft() == NULL)
+		neighbors += "Left: None |";
+	else
+		neighbors += "Left: " + to_string(getLeft()->getIndex())+" |";
+
+	if (getRight() == NULL)
+		neighbors += "Right: None |";
+	else
+		neighbors += "Right: " + to_string(getRight()->getIndex())+" |";
+
+	neighbors += ">";
+
+	return neighbors;
 }
 
 void Map::meetNGreet(){
@@ -31,33 +58,33 @@ void Map::meetNGreet(){
 }
 
 
-
 void Map::visitNeighbors(int index) {
 	Tile* temp;
 
 	if (index > sqrtOfTiles - 1) {
 		temp = &tiles.at(index - sqrtOfTiles);
-		addNeighbor(index, temp);
+		addNeighbor(index, temp,'u');
 	}
 
 	if (index < totalTiles - sqrtOfTiles) {
 		temp = &tiles.at(index + sqrtOfTiles);
-		addNeighbor(index, temp);
+		addNeighbor(index, temp, 'd');
 	}
 	if (index % sqrtOfTiles != 0) {
 		temp = &tiles.at(index - 1);
-		addNeighbor(index, temp);
+		addNeighbor(index, temp, 'l');
 	}
 	if ((index + 1) % sqrtOfTiles != 0) {
 		temp = &tiles.at(index + 1);
-		addNeighbor(index, temp);
+		addNeighbor(index, temp, 'r');
 	}
+
 }
 
 
-void Map::addNeighbor(int index, Tile *t){
+void Map::addNeighbor(int index, Tile *t, char dir){
 	try{
-		tiles.at(index).addNeighbor(t);
+		tiles.at(index).setNeighbor(t, dir);
 	}
 	catch (std::out_of_range e){
 		cout << "Out of range." << endl;
@@ -65,23 +92,14 @@ void Map::addNeighbor(int index, Tile *t){
 
 }
 
-void Map::removeNeighbor(int index, Tile* t){
-	tiles.at(index).removeNeighbor(t);
+void Map::removeNeighbor(int index, char dir){
+	tiles.at(index).setNeighbor(NULL, dir);
 }
 
-string Map::printNeighbors(int index){
-	string list = " ";
-
-	for (int i = 0; i < tiles.at(index).getNeighbors().size(); i++){
-		list += to_string(tiles.at(index).getNeighbors().at(i)->getIndex());
-		list += ", ";
-	}
-	return list;
-}
 
 void Map::printAdjList(){
 	for (int i = 0; i < totalTiles; i++)
-		cout << to_string(tiles.at(i).getIndex()) << ":    <" << printNeighbors(i) << ">" << endl;
+		cout << tiles.at(i).getNeighbors() << endl;
 	cout << "--------------------------  \n";
 }
 

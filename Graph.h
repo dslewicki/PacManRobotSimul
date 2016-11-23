@@ -8,24 +8,38 @@ using std::string;
 
 /*
 Contains the definitions of the following classes:
-	Tile: A tile of the map, contains an Entity value that can hold dots, Ghostses, SuperPac, etc.  Also holds a list of neighboring Tiles.
+	Tile: A tile of the map, contains an Entity value that can hold dots, Ghostses, SuperPac, etc.  Also holds pointers to nearby tiles.
 	Map: The actual map itself, which contains a vector(a better array) of Tiles, and can display what the hell is happening (eventually)
 */
 
 class Tile{
 	Entity *val;
 	int indexVal;
-	vector<Tile*> neighbors;
-	vector<Tile*>::iterator iter;
+	Tile* up;
+	Tile* down;
+	Tile* left;
+	Tile* right;
 
 public:
 	Tile(int index):indexVal(index) {}
 	Tile(Entity* ent,int index) : val(ent), indexVal(index){} //will be used when entities are ready
 
 	int getIndex() { return indexVal; }
-	vector<Tile*> getNeighbors() { return neighbors; }
-	void addNeighbor(Tile*);
-	void removeNeighbor(Tile*);
+	//vector<Tile*> getNeighbors(){}
+
+	Tile* getUp()		{ return up; }
+	Tile* getDown()		{ return down; }
+	Tile* getLeft()		{ return left; };
+	Tile* getRight()	{ return right; };
+
+	void setUp(Tile* t) { up = t; }
+	void setDown(Tile* t) { down = t; }
+	void setLeft(Tile* t) { left = t; }
+	void setRight(Tile* t) { right = t; }
+
+	void setNeighbor(Tile*, char);
+	string getNeighbors();
+	//void removeNeighbor(Tile*, char);
 };
 
 class Map{
@@ -46,14 +60,12 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	
-	//below two functions call tiles functions
-	void addNeighbor(int, Tile*);
-	void removeNeighbor(int, Tile*); 
+	void addNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
+	void removeNeighbor(int, char); //which direction should i cut off?
 
 	void BFS();  
 	void printAdjList();
 	void printMap();
 
-	string printNeighbors(int);
 	void test();  
 };

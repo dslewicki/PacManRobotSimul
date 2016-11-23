@@ -7,10 +7,10 @@ using std::cout;
 
 int main(){
 //test code
-	Map map(9);
+	Map map(16);
 	map.meetNGreet();
-	map.test();
-	//map.printAdjList();
+	//map.test();
+	map.printAdjList();
 
 	return 0;
 }
