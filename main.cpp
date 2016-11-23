@@ -6,15 +6,11 @@ using std::cout;
 
 
 int main(){
+//test code
+	Map map(9);
+	map.meetNGreet();
+	map.test();
+	//map.printAdjList();
 
-	Entity e= Entity('s', 4, 6, );
-	cout << e.isEatable();
-
-
-
-	/*Graph grid(9);
-	grid.build();
-	grid.printAdjList();
-	grid.printGrid();*/
 	return 0;
 }

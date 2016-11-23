@@ -1,33 +1,24 @@
-/*
-LIST OF ALL ENTITIES:
--GHOSTSES
--SUPERPAC
--DOT
--SUPERDOT
-*/
-
-
 
 class Entity{
-	//more functions will be implemented as time progresses
-	char symbol; //will be used to represent entity as a symbol
+	char clr; 
 	int posX, posY, pntVal;
 	bool eatable;
 
 public:
-	Entity(): symbol(' '), posX(0), posY(0), pntVal(0), eatable(false){}
-	Entity(char s, int x, int y, int pv, bool eat) : symbol(s), posX(x), posY(y), pntVal(pv), eatable(eat){}
-	char getSymbol()					{ return symbol; };
+	Entity(): clr(' '), posX(0), posY(0), pntVal(0), eatable(false){}
+	Entity(char s, int x, int y, int pv, bool eat) : clr(s), posX(x), posY(y), pntVal(pv), eatable(eat) {}
+	char getClr()						{ return clr; };
 	int getPosX()						{ return posX; };
 	int getPosY()						{ return posY; };
 	int getPntVal()						{ return pntVal; };
 	bool isEatable()					{ return eatable; };
 
-	void setSymbol(char val)			{ symbol = val;  };
+	void setSymbol(char val)			{ clr = val; };
 	void setPosX(int val)				{ posX = val;  };
 	void setPosY(int val)				{ posY = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
 	void setEatable(bool val)			{ eatable = val;  };
+
 };
 
 class Dot : public Entity{
