@@ -9,8 +9,8 @@ using std::to_string;
 
 void Tile::setNeighbor(Tile* t, char dir) {
 	int test = tolower(dir);
-	if (test != 'u' && test != 'd' && test != 'l' && test != 'r')//must be correct input
-		cout << "Failed to set neighbor, must enter one of the following directions: u(up), d(down), l(left), r(right)" << endl;
+	if (test != 'n' && test != 's' && test != 'w' && test != 'e')//must be correct input
+		cout << "Failed to set neighbor, must enter one of the following directions: n(north), s(south), w(west), e(east)" << endl;
 
 	else {
 		if (t == NULL) {//if wanting to remove, check to see if tile is in neighbors before removal
@@ -18,20 +18,19 @@ void Tile::setNeighbor(Tile* t, char dir) {
 				cout << "Already empty" << endl;
 
 			else {
-
 				//find out which one to remove exactly
-				if (test == 'u')
-					t=getUp();
-				if (test == 'd')
-					t=getDown();
-				if (test == 'l')
-					t=getLeft();
-				if (test == 'r')
-					t=getRight();
+				if (test == 'n')
+					t=getNorth();
+				if (test == 's')
+					t=getSouth();
+				if (test == 'w')
+					t=getWest();
+				if (test == 'e')
+					t=getEast();
 
+				//removal from neighbors
 				if (t == NULL)//if trying to remove a tile that doesnt exist, dont
 					cout << "Tile does not exist, cannot remove" << endl;
-
 				else {//begin search thru vector to remove that tile			
 					iter = neighbors.begin();
 					while (iter != neighbors.end()) {
@@ -40,6 +39,17 @@ void Tile::setNeighbor(Tile* t, char dir) {
 						else
 							++iter;
 					}
+					//make the pointer point to its own tile
+					t = NULL;
+
+					/*if (test == 'n')
+						setNorth(NULL);
+					if (test == 's')
+						setSouth(NULL);
+					if (test == 'w')
+						setWest(NULL);
+					if (test == 'e')
+						setEast(NULL);*/
 				}
 			}
 		}//done removal
@@ -49,14 +59,15 @@ void Tile::setNeighbor(Tile* t, char dir) {
 		}//done insert
 
 		//adjust the pointers
-		if (test == 'u')
-			setUp(t);
-		if (test == 'd')
-			setDown(t);
-		if (test == 'l')
-			setLeft(t);
-		if (test == 'r')
-			setRight(t);
+
+		if (test == 'n')
+			setNorth(t);
+		if (test == 's')
+			setSouth(t);
+		if (test == 'w')
+			setWest(t);
+		if (test == 'e')
+			setEast(t);
 	}
 
 }
@@ -64,25 +75,25 @@ void Tile::setNeighbor(Tile* t, char dir) {
 string Tile::getStrNeighbors() {
 	string output = to_string(getIndex())+": <";
 
-	if(getUp()==NULL)
-		output += "Up: None |";	
+	if(getNorth()==NULL)
+		output += "N: None |";	
 	else
-		output += "Up: " + to_string(getUp()->getIndex())+" |";
+		output += "N: " + to_string(getNorth()->getIndex())+" |";
 
-	if (getDown() == NULL)
-		output += "Down: None |";
+	if (getSouth() == NULL)
+		output += "S: None |";
 	else
-		output += "Down: " + to_string(getDown()->getIndex())+" |";
+		output += "S: " + to_string(getSouth()->getIndex())+" |";
 
-	if (getLeft() == NULL)
-		output += "Left: None |";
+	if (getWest() == NULL)
+		output += "W: None |";
 	else
-		output += "Left: " + to_string(getLeft()->getIndex())+" |";
+		output += "W: " + to_string(getWest()->getIndex())+" |";
 
-	if (getRight() == NULL)
-		output += "Right: None |";
+	if (getEast() == NULL)
+		output += "E: None |";
 	else
-		output += "Right: " + to_string(getRight()->getIndex())+" |";
+		output += "E: " + to_string(getEast()->getIndex())+" |";
 
 	output += ">   ";
 
@@ -108,20 +119,20 @@ void Map::visitNeighbors(int index) { //connects all the tiles to their respecti
 	
 	if (index > sqrtOfTiles - 1) {
 		temp = &tiles.at(index - sqrtOfTiles);
-		addNeighbor(index, temp,'u');
+		addNeighbor(index, temp,'n');
 	}
 
 	if (index < totalTiles - sqrtOfTiles) {
 		temp = &tiles.at(index + sqrtOfTiles);
-		addNeighbor(index, temp, 'd');
+		addNeighbor(index, temp, 's');
 	}
 	if (index % sqrtOfTiles != 0) {
 		temp = &tiles.at(index - 1);
-		addNeighbor(index, temp, 'l');
+		addNeighbor(index, temp, 'w');
 	}
 	if ((index + 1) % sqrtOfTiles != 0) {
 		temp = &tiles.at(index + 1);
-		addNeighbor(index, temp, 'r');
+		addNeighbor(index, temp, 'e');
 	}
 
 }
@@ -134,20 +145,101 @@ void Map::addNeighbor(int index, Tile *t, char dir){
 	catch (std::out_of_range e){
 		cout << "Out of range." << endl;
 	}
-
 }
 
 void Map::removeNeighbor(int index, char dir){
 	tiles.at(index).setNeighbor(NULL, dir);
 }
 
+//precond: since this makes a wall as the robot drives, it makes sense that the two indices should be right next to each other
+//PRE COND: either the row or the columns must be equal
+void Map::makeWall(int r1, int c1, int r2, int c2) {  //1:robot position   2: target position
+	int target = coordToIndex(r2, c2, sqrtOfTiles);
+	int orig = coordToIndex(r1, c1, sqrtOfTiles);
+	int rowdif= r2 - r1;
+	int coldif = c2 - c1;
+
+	if (abs(rowdif + coldif) != 1)
+		cout << "Invalid parameters to build wall" << endl;
+
+	else if (rowdif == 0) { //when in the same row
+
+		if (coldif == 1) {  //col2 leads by one, target to the east
+			removeNeighbor(orig, 'e');//remove the neighbor of this tile from the east
+			removeNeighbor(target, 'w'); //removes the neighbor of the target tile to the robot
+		}
+
+		if (coldif == -1) {  //col2 lags by one, target to the west
+			removeNeighbor(orig, 'w');//remove the neighbor of this tile from the west
+			removeNeighbor(target, 'e'); //removes the neighbor of the target tile to the robot
+		}
+	}
+
+	else if (coldif == 0) { //when in the same col
+
+		if (rowdif == 1) {  //row2 leads by one, target to the south
+			removeNeighbor(orig, 's');
+			removeNeighbor(target, 'n'); 
+		}
+
+		if (rowdif == -1) {  //row2 lags by one, target to the north
+			removeNeighbor(orig, 'n');
+			removeNeighbor(target, 's');
+		}
+	}
+
+}
 
 void Map::printAdjList(){
 	for (int i = 0; i < totalTiles; i++)
 		cout << tiles.at(i).getStrNeighbors() << endl;
 	cout << "--------------------------  \n";
 }
+/*
+KEY:
+	--- and | are valid connections
+	$ is the robot
+	A B C D are the ghostses
+	* is a regular pellet
+	@ is a power pellet
+	% is a bonus(?)
+
+*/
+void Map::printMap() {
+
+	for (int i = 0; i < sqrtOfTiles; i++){ 
+		string output1 = "", output2="";  //output1->current row  output2->southern connections
+		
+		if (i == 0) {
+			for (int k = 0; k < sqrtOfTiles; k++) 
+				output1 += "  "+to_string(k) + " ";
+			
+			cout << output1 << endl;
+			output1 = "";
+		} 
+		for (int j = 0; j < sqrtOfTiles; j++) {
+			if(j==0)
+				output1 += to_string(i) + " ";
+
+			output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
+
+			//if above tile connection is null, wall
+			if (tiles.at(j+i*sqrtOfTiles).getEast() == NULL)
+				output1 += "   ";
+			else
+				output1 += "---";
+			
+			if (tiles.at(j+i*sqrtOfTiles).getSouth() == NULL)
+				output2 += "    ";
+			else
+				output2 += "  | ";
+				//check for walls below
+		}
+		cout << output1 << endl;
+		cout << output2 << endl;
+	}
+}
 
 void Map::test(){//put test functions in here
-	removeNeighbor(coordToIndex(2, 0, sqrtOfTiles), 'd');
+	//makeWall(2, 0, 3, 0);
 }

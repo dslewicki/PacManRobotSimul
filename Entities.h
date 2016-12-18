@@ -4,20 +4,20 @@ Contains info about the Pacman, Ghost, Dots, Powerups
 
 
 class Entity{
-	char clr; 
+	char symb; 
 	int posX, posY, pntVal;
 	bool eatable;
 
 public:
-	Entity(): clr(' '), posX(0), posY(0), pntVal(0), eatable(false){}
-	Entity(char s, int x, int y, int pv, bool eat) : clr(s), posX(x), posY(y), pntVal(pv), eatable(eat) {}
-	char getClr()						{ return clr; };
+	Entity(): symb(' '), posX(0), posY(0), pntVal(0), eatable(false){}
+	Entity(char s, int x, int y, int pv, bool eat) : symb(s), posX(x), posY(y), pntVal(pv), eatable(eat) {}
+	char getSymb()						{ return symb; };
 	int getPosX()						{ return posX; };
 	int getPosY()						{ return posY; };
 	int getPntVal()						{ return pntVal; };
 	bool isEatable()					{ return eatable; };
 
-	void setSymbol(char val)			{ clr = val; };
+	void setSymbol(char val)			{ symb = val; };
 	void setPosX(int val)				{ posX = val;  };
 	void setPosY(int val)				{ posY = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
@@ -25,18 +25,18 @@ public:
 
 };
 
-class Dot : public Entity{
+class Pellet : public Entity{
 	
 public:
-	Dot() :Entity(){ 
+	Pellet() :Entity(){ 
 		setSymbol('*');
 		setEatable(true);
 		setPntVal(10);
 	}
-	Dot(int x, int y) :Entity('*', x, y, 10, true){}	
+	Pellet(int x, int y) :Entity('*', x, y, 10, true){}	
 };
 
-class PwrPlt : public Dot{
+class PwrPlt : public Pellet{
 
 };
 

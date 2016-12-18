@@ -15,29 +15,33 @@ Contains the definitions of the following classes:
 class Tile{
 	Entity *val;
 	int indexVal;
-	Tile* up;
-	Tile* down;
-	Tile* left;
-	Tile* right;
+	Tile* north;
+	Tile* south;
+	Tile* west;
+	Tile* east;
 	vector<Tile*> neighbors;
 	vector<Tile*>::iterator iter;  //navigates thru the vector
 
 public:
 	Tile(int index):indexVal(index) {}
-	Tile(Entity* ent,int index) : val(ent), indexVal(index){} //will be used when entities are ready
+	Tile(Entity* ent,int index) : val(ent), indexVal(index){}
 
-	int getIndex() { return indexVal; }
+	Entity* getEnt()		{ return val; }
+	void setEnt(Entity* e)	{ val = e; }
+	int getIndex()			{ return indexVal; }
+
 	vector<Tile*> getNeighbors() { return neighbors; }
 
-	Tile* getUp()		{ return up; }
-	Tile* getDown()		{ return down; }
-	Tile* getLeft()		{ return left; };
-	Tile* getRight()	{ return right; };
+	Tile* getNorth()		{ return north; }
+	Tile* getSouth()		{ return south; }
+	Tile* getWest()			{ return west; };
+	Tile* getEast()			{ return east; };
 
-	void setUp(Tile* t) { up = t; }
-	void setDown(Tile* t) { down = t; }
-	void setLeft(Tile* t) { left = t; }
-	void setRight(Tile* t) { right = t; }
+	void setNorth(Tile* t) { north = t; }
+	void setSouth(Tile* t) { south = t; }
+	void setWest(Tile* t) { west = t; }
+	void setEast(Tile* t) { east = t; }
+
 
 	void setNeighbor(Tile*, char);
 	string getStrNeighbors();
@@ -49,12 +53,13 @@ class Map{
 	int sqrtOfTiles;  //effectively the length/width of the grid, this will be used in all sorts of calculations
 	vector<Tile> tiles;
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
+	Pellet p;
 
 public://the constructor sets up each tile, but does not "connect" them (no neighbors detected)
 	Map(int numOfVertices) :totalTiles(numOfVertices), sqrtOfTiles(sqrt(numOfVertices)) {
 		tiles.reserve(totalTiles);
 		for (int i = 0; i < numOfVertices; i++) {
-			Tile insert(i);
+			Tile insert(&p, i);
 			tiles.push_back(insert);
 		}
 	} 
@@ -62,11 +67,12 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	
 	void addNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
-	void removeNeighbor(int, char); //which direction should i cut off?
+	void removeNeighbor(int, char); //which direction should i cut off from where i am?
+	void makeWall(int, int, int, int); //given robot position and impassable tile position, update the adjacency list
 
-	void BFS();  //finds the shortest path to wherever
-	void printAdjList();  //prints out the adjacency list
-	void printMap(); //will be used in the gui(?)
+	//void BFS();  //finds the shortest path to wherever
+	void printAdjList();
+	void printMap();
 
 	void test();  //just a function for testing
 };
