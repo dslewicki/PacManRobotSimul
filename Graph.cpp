@@ -39,27 +39,14 @@ void Tile::setNeighbor(Tile* t, char dir) {
 						else
 							++iter;
 					}
-					//make the pointer point to its own tile
 					t = NULL;
-
-					/*if (test == 'n')
-						setNorth(NULL);
-					if (test == 's')
-						setSouth(NULL);
-					if (test == 'w')
-						setWest(NULL);
-					if (test == 'e')
-						setEast(NULL);*/
 				}
 			}
 		}//done removal
 
 		else {//wanting to insert
 			neighbors.push_back(t);
-		}//done insert
-
-		//adjust the pointers
-
+		}//done insert, now adjust pointers
 		if (test == 'n')
 			setNorth(t);
 		if (test == 's')
@@ -99,6 +86,17 @@ string Tile::getStrNeighbors() {
 
 	//now add the vector to the output
 	string vect = "   |||   <";
+
+	//this code here was meant to be used for a list to hold the neighbors, but i couldnt get it working 
+	/*if (neighbors.empty())
+		;
+	else {
+		iter = neighbors.begin();
+		while (iter != neighbors.end()) {
+			vect += to_string(*iter->getIndex());
+			++iter;
+		}
+	}*/
 	for (int i = 0; i < getNeighbors().size(); i++) {
 		vect += to_string(getNeighbors().at(i)->getIndex())+", ";
 	}
@@ -221,7 +219,7 @@ void Map::printMap() {
 			if(j==0)
 				output1 += to_string(i) + " ";
 
-			output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
+			output1 += to_string(tiles.at(j + i*(sqrtOfTiles)).getIndex());//output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
 
 			//if above tile connection is null, wall
 			if (tiles.at(j+i*sqrtOfTiles).getEast() == NULL)
@@ -240,6 +238,64 @@ void Map::printMap() {
 	}
 }
 
-void Map::test(){//put test functions in here
-	//makeWall(2, 0, 3, 0);
+
+vector<int> Map::BFS(int r1, int c1, int r2, int c2) {
+	bool* visited= new bool[totalTiles]; //every tile is set to not visited at first
+	list<int> queue; //a waitlist to visit neighbors
+	list<int>::iterator it;
+	vector<Tile*> temp;
+	list<int> indices; //neighbor indices
+	map<int, int> pairs;  //each pair will be (child, parent)
+	vector<int> path;//final path
+
+	int child = 0;
+	int parent = coordToIndex(r1, c1, sqrtOfTiles);
+	
+	for (int i = 0; i < totalTiles; i++)
+		visited[i] = false;
+
+	//push the current tile into the visited pile, input value should be first pair into map
+	visited[parent] = true;
+	queue.push_back(parent);
+
+	while (!queue.empty()) { //while there are still tiles to look through
+		//take the current tile and add its neighbors to the end of the queue
+		//cout << "queu" << endl;
+		parent = queue.front();
+		queue.pop_front();
+		temp = tiles.at(parent).getNeighbors();
+		//cout << parent << endl;
+
+		for (int i = 0; i < temp.size(); i++) //gets the tile indices
+			indices.push_back(temp.at(i)->getIndex());
+		
+		//filters out whats been visited or not, then adds to the queue and makes a pair
+		for (it = indices.begin(); it != indices.end(); it++) {
+			//cout << *it << endl;
+		    if (!visited[*it]) {
+				visited[*it] = true;
+				queue.push_back(*it);
+				pairs.insert({*it, parent});
+			}
+
+			//if found the desired tile, start tracing back
+			if (*it == coordToIndex(r2, c2, sqrtOfTiles)) {
+				child = *it;
+			}				
+		}
+
+	}
+	while (parent != coordToIndex(r1, c1, sqrtOfTiles)) {
+		path.push_back(child);
+		parent = pairs[child];
+		path.push_back(parent);
+		child = parent;
+	}
+	cout << "BFS from (" << r1 << ", " << c1 << ") to (" << r2 << ", " << c2 << ") " << endl;
+	for (int i = 0; i < path.size(); i++) {
+		cout << path.at(i) << ", ";
+		if ((i + 2) % 2 == 1)
+			cout << endl;
+	}
+	return path;
 }

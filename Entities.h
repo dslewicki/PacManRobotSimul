@@ -3,21 +3,21 @@ Contains info about the Pacman, Ghost, Dots, Powerups
 */
 
 
-class Entity{
+class Entity{ //same thing as an empty space
 	char symb; 
 	int posX, posY, pntVal;
 	bool eatable;
 
 public:
-	Entity(): symb(' '), posX(0), posY(0), pntVal(0), eatable(false){}
-	Entity(char s, int x, int y, int pv, bool eat) : symb(s), posX(x), posY(y), pntVal(pv), eatable(eat) {}
+	Entity(): symb(' '), posX(0), posY(0), pntVal(0), eatable(true){}
+	Entity(int x, int y) : symb(' '), posX(x), posY(y), pntVal(0), eatable(true) {}
 	char getSymb()						{ return symb; };
 	int getPosX()						{ return posX; };
 	int getPosY()						{ return posY; };
 	int getPntVal()						{ return pntVal; };
 	bool isEatable()					{ return eatable; };
 
-	void setSymbol(char val)			{ symb = val; };
+	void setSymb(char val)			{ symb = val; };
 	void setPosX(int val)				{ posX = val;  };
 	void setPosY(int val)				{ posY = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
@@ -25,23 +25,51 @@ public:
 
 };
 
-class Pellet : public Entity{
+class Unknown : public Entity {
+	//to maybe be implemented
+};
+
+class Consumable : public Entity {
+public:
+	Consumable() :Entity() {}
+
+	Consumable(int x, int y) :Entity(x, y) {}
+
+	void gotEaten() {
+		setSymb(' ');
+		setPntVal(0);
+	} //when eaten, it is now considered an empty tile(default Entity)
+};
+
+class Pellet : public Consumable{
 	
 public:
-	Pellet() :Entity(){ 
-		setSymbol('*');
-		setEatable(true);
+	Pellet() :Consumable(){ 
+		setSymb('*');
 		setPntVal(10);
 	}
-	Pellet(int x, int y) :Entity('*', x, y, 10, true){}	
+
+	Pellet(int x, int y) :Consumable(x, y){
+		setSymb('*');
+		setPntVal(10);
+	}	
 };
 
 class PwrPlt : public Pellet{
 
+public:
+	PwrPlt() :Pellet() {
+		setSymb('@');
+		setPntVal(50);
+	}
+	PwrPlt(int x, int y) :Pellet(x, y) {
+		setSymb('@');
+		setPntVal(50);
+	}
 };
 
 
-class SuperPac :public Entity{
+class Roamer :public Entity{
 public:
 
 };

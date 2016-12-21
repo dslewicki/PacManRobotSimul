@@ -3,14 +3,23 @@
 
 using std::cout;
 
-//todo, make the removal sync with neighbors:: create another remove function
-//find a way to display the grid
+//todo:  implement an effective vision range for the "robot",[possibly redo the grid
 
 int main(){
-//test code
+
 	Map map(16);
 	map.meetNGreet();
-	map.makeWall(2, 0, 2, 1);
+
+
+	map.makeWall(0, 0, 0, 1);
+	map.makeWall(1, 0, 2, 0);
+	map.makeWall(1, 1, 1, 2);
+	map.makeWall(1, 2, 1, 3);
+	map.makeWall(3, 0, 3, 1);
+	map.makeWall(2, 2, 3, 2);
+	
+	map.BFS(3, 1, 1, 3);
+
 	map.printMap();
 	map.printAdjList();
 

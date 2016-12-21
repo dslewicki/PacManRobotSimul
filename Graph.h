@@ -1,8 +1,12 @@
 #include "Entities.h"
 #include <vector>
+#include <map>
+#include <list>
 #include <iterator>
 #include <string>
 
+using std::map;
+using std::list;
 using std::vector;
 using std::string;
 
@@ -70,9 +74,8 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void removeNeighbor(int, char); //which direction should i cut off from where i am?
 	void makeWall(int, int, int, int); //given robot position and impassable tile position, update the adjacency list
 
-	//void BFS();  //finds the shortest path to wherever
+	
+	vector<int> BFS(int, int, int, int);  //returns the shortest paths from A to B
 	void printAdjList();
 	void printMap();
-
-	void test();  //just a function for testing
 };
