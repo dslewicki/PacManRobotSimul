@@ -11,13 +11,15 @@ int main(){
 	map.meetNGreet();
 
 
-	map.makeWall(0, 0, 0, 1);
+	/*map.makeWall(0, 0, 0, 1);
 	map.makeWall(1, 0, 2, 0);
 	map.makeWall(1, 1, 1, 2);
 	map.makeWall(1, 2, 1, 3);
 	map.makeWall(3, 0, 3, 1);
-	map.makeWall(2, 2, 3, 2);
+	map.makeWall(2, 2, 3, 2);*/
 	
+	//map.deleteTile(1, 1);
+
 	map.BFS(3, 1, 1, 3);
 
 	map.printMap();

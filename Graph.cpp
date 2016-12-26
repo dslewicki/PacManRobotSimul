@@ -201,7 +201,7 @@ KEY:
 	* is a regular pellet
 	@ is a power pellet
 	% is a bonus(?)
-
+	? are unknowns
 */
 void Map::printMap() {
 
@@ -219,8 +219,8 @@ void Map::printMap() {
 			if(j==0)
 				output1 += to_string(i) + " ";
 
-			output1 += to_string(tiles.at(j + i*(sqrtOfTiles)).getIndex());//output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
-
+			output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
+			//output1 += to_string(tiles.at(j + i*(sqrtOfTiles)).getIndex());
 			//if above tile connection is null, wall
 			if (tiles.at(j+i*sqrtOfTiles).getEast() == NULL)
 				output1 += "   ";
@@ -298,4 +298,23 @@ vector<int> Map::BFS(int r1, int c1, int r2, int c2) {
 			cout << endl;
 	}
 	return path;
+}
+
+void Map::deleteTile(int r, int c){
+	int temp = coordToIndex(r, c, sqrtOfTiles); //break the neighbors' connections to this	
+	try {
+		removeNeighbor(temp, 'e');//remove the neighbor of this tile from the east
+		removeNeighbor(temp + 1, 'w'); //removes the neighbor of the target tile to the robot
+		removeNeighbor(temp, 'w');//remove the neighbor of this tile from the west
+		removeNeighbor(temp - 1, 'e'); //removes the neighbor of the target tile to the robot
+
+		removeNeighbor(temp, 's');
+		removeNeighbor(temp+sqrtOfTiles, 'n');
+		removeNeighbor(temp, 'n');
+		removeNeighbor(temp-sqrtOfTiles, 's');	
+
+	}
+	catch (std::out_of_range& e) {
+
+	}
 }

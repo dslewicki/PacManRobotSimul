@@ -73,7 +73,7 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void addNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
 	void removeNeighbor(int, char); //which direction should i cut off from where i am?
 	void makeWall(int, int, int, int); //given robot position and impassable tile position, update the adjacency list
-
+	void deleteTile(int, int);
 	
 	vector<int> BFS(int, int, int, int);  //returns the shortest paths from A to B
 	void printAdjList();
