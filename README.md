@@ -2,6 +2,10 @@
 Simulated environment for the robot for the Pac-Man Robot competition.
 This program will be used to test the algorithm for the competition, and will possibly be implemented into the robot itself.
 
+01/03/2017
+Nose is stuffy, but general movement for the robot is underway.  Next will be vision, where the map will be unknown at first, 
+then as the bot turns each corner, everything it sees will be revealed.
+
 As of 12/28/2016, a basic display representing the grid has been established, and the hierarchy of entities are being worked on.  
 BFS has also been completed, and will be used in the algorithm which has yet to be realized.  A* algorithm may be used once the
 robot fully maps out all tiles for better pathfinding.

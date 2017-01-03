@@ -58,6 +58,7 @@ class Map{
 	vector<Tile> tiles;
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
 	Pellet p;
+	PwrPlt pp;
 
 public://the constructor sets up each tile, but does not "connect" them (no neighbors detected)
 	Map(int numOfVertices) :totalTiles(numOfVertices), sqrtOfTiles(sqrt(numOfVertices)) {
@@ -66,7 +67,17 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 			Tile insert(&p, i);
 			tiles.push_back(insert);
 		}
+		tiles.at(4).setEnt(&pp);
+		tiles.at(7).setEnt(&pp);
+		
+			
 	} 
+
+	int getSqrtTiles() { return sqrtOfTiles; }
+	Entity* getEntAt(int);
+	void setEntAt(int, Entity*);
+
+	Tile getTileAt(int);
 
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	

@@ -1,7 +1,10 @@
 #include "coordindex.h"
 
-int coordToIndex(int x, int y, int keynum){
-	return x*keynum + y;
+int coordToIndex(int r, int c, int keynum){
+	if (r < 0 || c < 0 || r==keynum || c==keynum)
+		return -1;
+		
+	return r*keynum + c;
 }
 
 int indexToRownum(int keynum, int z) {

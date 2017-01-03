@@ -22,7 +22,7 @@ public:
 	void setPosY(int val)				{ posY = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
 	void setEatable(bool val)			{ eatable = val;  };
-
+	//virtual int gotEaten(); decided aganist making it abstract, as I was planning to treat the base entity as an empty tile
 };
 
 class Unknown : public Entity {
@@ -35,10 +35,6 @@ public:
 
 	Consumable(int x, int y) :Entity(x, y) {}
 
-	void gotEaten() {
-		setSymb(' ');
-		setPntVal(0);
-	} //when eaten, it is now considered an empty tile(default Entity)
 };
 
 class Pellet : public Consumable{
@@ -69,7 +65,19 @@ public:
 };
 
 
-class Roamer :public Entity{
+class Roamer :public Entity {
 public:
+	Roamer() : Entity() {}
+	Roamer(int x, int y) : Entity(x, y) {}
 
+	void move();
+	void look();
+};
+
+class Pac :public Roamer {
+public:
+	Pac() :Roamer() {
+		setSymb('$');
+	}
+	Pac(int x, int y) :Roamer(x, y) {}
 };

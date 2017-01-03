@@ -106,6 +106,19 @@ string Tile::getStrNeighbors() {
 	return output;
 }
 
+Entity* Map::getEntAt(int index) {
+	return tiles.at(index).getEnt();
+}
+
+void Map::setEntAt(int index, Entity* insert) {
+	tiles.at(index).setEnt(insert);
+}
+
+Tile Map::getTileAt(int index) {
+	return tiles.at(index);
+}
+
+
 void Map::meetNGreet(){
 	for (int i = 0; i < totalTiles; i++)
 		visitNeighbors(i);
@@ -202,6 +215,7 @@ KEY:
 	@ is a power pellet
 	% is a bonus(?)
 	? are unknowns
+	# is a wall
 */
 void Map::printMap() {
 
