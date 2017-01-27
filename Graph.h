@@ -66,18 +66,16 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 		for (int i = 0; i < numOfVertices; i++) {
 			Tile insert(&p, i);
 			tiles.push_back(insert);
-		}
-		tiles.at(4).setEnt(&pp);
-		tiles.at(7).setEnt(&pp);
-		
-			
+		}			
 	} 
 
+	void initialize();
 	int getSqrtTiles() { return sqrtOfTiles; }
 	Entity* getEntAt(int);
 	void setEntAt(int, Entity*);
 
 	Tile getTileAt(int);
+	void setTileAt(int, Tile);
 
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	
@@ -89,4 +87,7 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	vector<int> BFS(int, int, int, int);  //returns the shortest paths from A to B
 	void printAdjList();
 	void printMap();
+	//returns a map for now, will return a vector later
+	//Map look(int, int);
+	vector<Tile> look(int, int, bool(&)[16]); //looks in all four directions from a given coordinate, then returns viewed tiles
 };

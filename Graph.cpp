@@ -118,6 +118,9 @@ Tile Map::getTileAt(int index) {
 	return tiles.at(index);
 }
 
+void Map::setTileAt(int index, Tile insert) {
+	tiles.at(index) = insert;
+}
 
 void Map::meetNGreet(){
 	for (int i = 0; i < totalTiles; i++)
@@ -332,3 +335,109 @@ void Map::deleteTile(int r, int c){
 
 	}
 }
+
+void Map::initialize() {
+	tiles.at(4).setEnt(&pp);
+	tiles.at(7).setEnt(&pp);
+}
+
+//will be returning vector after more details are worked out
+vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vectors of tiles from N->E->S->W, divided by a NULL to represent new direction
+	vector<Tile> scanning;
+	//bool* visited = new bool[totalTiles];//might have to move into main
+	int r = row, c = col, dest = 0;
+	bool deadend = false;
+
+	/*IMPORTANT: so because I'm pressed for time and lazy, instead of coding it so that i only know the path in a certain
+	direction for look(), i just cut off the pointers (if they havent been discovered before)that weren't associated in that direction. 
+	In plain english, if the robot looks west, it can only see how long west/east goes, and not whether there are any paths to north or south*/
+
+	while (!deadend) {//for north
+		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getNorth() != NULL) {//increment and update current tile to the map/vector
+			r--;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+			Tile insert = getTileAt(dest);
+			//adjusting for viewing in one direction
+			if (visited[dest] == false) {
+				insert.setEast(NULL);
+				insert.setWest(NULL);
+			}
+			scanning.push_back(insert);
+		}
+		else
+			deadend = true;	
+	}
+	deadend = false;
+	r = row;
+	c = col;
+
+	//cout << "north works";
+
+	while (!deadend) {//for east
+		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getEast() != NULL) {//increment and update current tile to the map/vector
+			c++;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+			Tile insert = getTileAt(dest);
+			//adjusting for viewing in one direction
+			if (visited[dest] == false) {
+				insert.setNorth(NULL);
+				insert.setSouth(NULL);
+			}
+			scanning.push_back(insert);
+		}
+		else
+			deadend = true;
+	}
+
+	deadend = false;
+	r = row;
+	c = col;
+
+	//cout << "east works";
+
+	while (!deadend) {//for south
+		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getSouth() != NULL) {//increment and update current tile to the map/vector
+			r++;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+			Tile insert = getTileAt(dest);
+			//adjusting for viewing in one direction
+			if (visited[dest] == false) {
+				insert.setEast(NULL);
+				insert.setWest(NULL);
+			}
+			scanning.push_back(insert);
+		}
+		else
+			deadend = true;
+	}
+	deadend = false;
+	r = row;
+	c = col;
+
+	//cout << "south works";
+
+	while (!deadend) {//for west
+		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getWest() != NULL) {//increment and update current tile to the map/vector
+			c--;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+			Tile insert = getTileAt(dest);
+			//adjusting for viewing in one direction
+			if (visited[dest] == false) {
+				insert.setNorth(NULL);
+				insert.setSouth(NULL);
+			}
+			scanning.push_back(insert);
+		}
+		else
+			deadend = true;
+	}
+
+	//cout << "west works";
+				for (int i = 0; i < scanning.size(); i++) 
+					cout << scanning.at(i).getEnt()->getSymb() << ", ";
+				cout << endl;
+				
+				return scanning;
+			}
+		
+	

@@ -2,6 +2,12 @@
 Simulated environment for the robot for the Pac-Man Robot competition.
 This program will be used to test the algorithm for the competition, and will possibly be implemented into the robot itself.
 
+01/26/2017
+Worked on the way the PacBot would map out unknowns.  This has implementation has been coded in main.cpp for now, and will most
+likely move to its respective class.  There are multiple issues with this push, as the robot can see around corners.  Additionally,
+due to time constraints, main.cpp has been bombarded with a whole lot of code, specifically the controls and a bunch of other stuff.
+I still need to automate the bot and add the ghosts.
+ 
 01/03/2017
 Nose is stuffy, but general movement for the robot is underway.  Next will be vision, where the map will be unknown at first, 
 then as the bot turns each corner, everything it sees will be revealed.

@@ -1,3 +1,5 @@
+
+
 /*
 Contains info about the Pacman, Ghost, Dots, Powerups
 */
@@ -66,12 +68,16 @@ public:
 
 
 class Roamer :public Entity {
+	friend class Map;
+	//Map memory; //robot/ghosts personal memory of the map
 public:
-	Roamer() : Entity() {}
+	//map size to construct the memory map was hardcoded, sorry about that
+	Roamer() : Entity(){}
 	Roamer(int x, int y) : Entity(x, y) {}
 
 	void move();
-	void look();
+    void look();
+	//Map getMem() { return memory; };
 };
 
 class Pac :public Roamer {
@@ -80,4 +86,5 @@ public:
 		setSymb('$');
 	}
 	Pac(int x, int y) :Roamer(x, y) {}
+
 };
