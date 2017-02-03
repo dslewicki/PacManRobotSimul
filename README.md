@@ -2,6 +2,9 @@
 Simulated environment for the robot for the Pac-Man Robot competition.
 This program will be used to test the algorithm for the competition, and will possibly be implemented into the robot itself.
 
+02/02/2017
+I can detect walls from the north, but it does not draw it correctly.  I want to die.
+
 01/26/2017
 Worked on the way the PacBot would map out unknowns.  This has implementation has been coded in main.cpp for now, and will most
 likely move to its respective class.  There are multiple issues with this push, as the robot can see around corners.  Additionally,

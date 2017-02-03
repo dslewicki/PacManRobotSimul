@@ -133,33 +133,55 @@ void Map::visitNeighbors(int index) { //connects all the tiles to their respecti
 	
 	if (index > sqrtOfTiles - 1) {
 		temp = &tiles.at(index - sqrtOfTiles);
-		addNeighbor(index, temp,'n');
+		makeNeighbor(index, temp,'n');
 	}
 
 	if (index < totalTiles - sqrtOfTiles) {
 		temp = &tiles.at(index + sqrtOfTiles);
-		addNeighbor(index, temp, 's');
+		makeNeighbor(index, temp, 's');
 	}
 	if (index % sqrtOfTiles != 0) {
 		temp = &tiles.at(index - 1);
-		addNeighbor(index, temp, 'w');
+		makeNeighbor(index, temp, 'w');
 	}
 	if ((index + 1) % sqrtOfTiles != 0) {
 		temp = &tiles.at(index + 1);
-		addNeighbor(index, temp, 'e');
+		makeNeighbor(index, temp, 'e');
 	}
 
 }
 
 
-void Map::addNeighbor(int index, Tile *t, char dir){
+void Map::makeNeighbor(int index, Tile *to_insert, char dir){
+	int r = 0, c = 0;
 	try{
-		tiles.at(index).setNeighbor(t, dir);
+		tiles.at(index).setNeighbor(to_insert, dir);
+		/*//test code
+		if (dir == 'n') {
+			 r = indexToRownum(index, sqrtOfTiles);
+			 c = indexToColnum(index, sqrtOfTiles);
+			 tiles.at(coordToIndex(r - 1, c, sqrtOfTiles)).setNeighbor(tiles.at(index).getSouth(), 's');
+		}//end test code*/
 	}
 	catch (std::out_of_range e){
 		cout << "Out of range." << endl;
 	}
 }
+
+/*void Map::makeNeighbor(int r1, int c1, int r2, int c2) {
+	try {
+		tiles.at(index).setNeighbor(to_insert, dir);
+		//test code
+		if (dir == 'n') {
+			r = indexToRownum(index, sqrtOfTiles);
+			c = indexToColnum(index, sqrtOfTiles);
+			tiles.at(coordToIndex(r - 1, c, sqrtOfTiles)).setNeighbor(tiles.at(index).getSouth(), 's');
+		}//end test code
+	}
+	catch (std::out_of_range e) {
+		cout << "Out of range." << endl;
+	}
+}*/
 
 void Map::removeNeighbor(int index, char dir){
 	tiles.at(index).setNeighbor(NULL, dir);
@@ -339,30 +361,57 @@ void Map::deleteTile(int r, int c){
 void Map::initialize() {
 	tiles.at(4).setEnt(&pp);
 	tiles.at(7).setEnt(&pp);
+	makeWall(1, 0, 2, 0);
+	makeWall(3, 0, 3, 1);
+	makeWall(1, 1, 1, 2);
+	makeWall(0, 3, 1, 3);
+	makeWall(1, 2, 2, 2);
+	makeWall(2, 3, 2, 4);
+	makeWall(2, 1, 3, 1);
+	makeWall(3, 2, 3, 3);
+	makeWall(3, 3, 4, 3);
 }
 
 //will be returning vector after more details are worked out
-vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vectors of tiles from N->E->S->W, divided by a NULL to represent new direction
-	vector<Tile> scanning;
-	//bool* visited = new bool[totalTiles];//might have to move into main
+vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->S->W, divided by a NULL to represent new direction
+	vector<int> scanning;
 	int r = row, c = col, dest = 0;
 	bool deadend = false;
+	dest = coordToIndex(r, c, sqrtOfTiles);
+	while (!deadend) {
+		if (tiles.at(dest).getNorth() != NULL) {
+			--r;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+		}
+		else
+			deadend = true;
+	}
+	scanning.push_back(coordToIndex(row, c, sqrtOfTiles));
+	scanning.push_back(dest);
 
-	/*IMPORTANT: so because I'm pressed for time and lazy, instead of coding it so that i only know the path in a certain
-	direction for look(), i just cut off the pointers (if they havent been discovered before)that weren't associated in that direction. 
-	In plain english, if the robot looks west, it can only see how long west/east goes, and not whether there are any paths to north or south*/
 
+	/*Tile nav(coordToIndex(r, c, sqrtOfTiles));
 	while (!deadend) {//for north
-		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getNorth() != NULL) {//increment and update current tile to the map/vector
+		for (int i=0;i<25;i++)
+			cout << visited[i] <<", ";
+		cout << endl;
+
+		if (nav.getNorth() != NULL) {//increment and update current tile to the map/vector
 			r--;
 			dest = coordToIndex(r, c, sqrtOfTiles);
-			Tile insert = getTileAt(dest);
+			nav = getTileAt(dest);
+			//Tile insert = getTileAt(dest);
 			//adjusting for viewing in one direction
 			if (visited[dest] == false) {
-				insert.setEast(NULL);
-				insert.setWest(NULL);
+				nav.setEast(NULL);
+				nav.setWest(NULL);
+				//insert.setEast(NULL);
+				//insert.setWest(NULL);
+				visited[dest] = true;
+				cout << "visited 1";
 			}
-			scanning.push_back(insert);
+
+			scanning.push_back(nav);//scanning.push_back(insert);
 		}
 		else
 			deadend = true;	
@@ -370,10 +419,12 @@ vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vector
 	deadend = false;
 	r = row;
 	c = col;
+	*/
+
 
 	//cout << "north works";
 
-	while (!deadend) {//for east
+	/*while (!deadend) {//for east
 		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getEast() != NULL) {//increment and update current tile to the map/vector
 			c++;
 			dest = coordToIndex(r, c, sqrtOfTiles);
@@ -382,6 +433,7 @@ vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vector
 			if (visited[dest] == false) {
 				insert.setNorth(NULL);
 				insert.setSouth(NULL);
+				cout << "visited 2";
 			}
 			scanning.push_back(insert);
 		}
@@ -404,6 +456,7 @@ vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vector
 			if (visited[dest] == false) {
 				insert.setEast(NULL);
 				insert.setWest(NULL);
+				cout << "visited 3";
 			}
 			scanning.push_back(insert);
 		}
@@ -425,18 +478,23 @@ vector<Tile> Map::look(int row, int col, bool (&visited)[16]) { //returns vector
 			if (visited[dest] == false) {
 				insert.setNorth(NULL);
 				insert.setSouth(NULL);
+				cout << "visited 3";
 			}
 			scanning.push_back(insert);
 		}
 		else
 			deadend = true;
-	}
+	}*/
 
 	//cout << "west works";
-				for (int i = 0; i < scanning.size(); i++) 
+				/*for (int i = 0; i < scanning.size(); i++) 
 					cout << scanning.at(i).getEnt()->getSymb() << ", ";
-				cout << endl;
+				cout << endl;*/
 				
+for (int i = 0; i < scanning.size(); i++)
+	cout << scanning.at(i)<< ", ";
+cout << endl; 
+
 				return scanning;
 			}
 		

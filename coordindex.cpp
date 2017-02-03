@@ -7,13 +7,13 @@ int coordToIndex(int r, int c, int keynum){
 	return r*keynum + c;
 }
 
-int indexToRownum(int keynum, int z) {
+int indexToRownum(int z, int keynum) {
 	if (z - keynum < 0)
 		return 0;
 
 	return z/keynum;
 }
 
-int indexToColnum(int keynum, int z) {
+int indexToColnum(int z, int keynum) {
 	return z - ((z / keynum)*keynum);
 }

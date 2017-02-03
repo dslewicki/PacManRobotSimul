@@ -79,7 +79,9 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	
-	void addNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
+	void makeNeighbor(int, Tile*, char); //adds a neighbor(Tile*) to tiles(int) and specifies where neighbor is(char)
+	//void makeNeighbor(int, int, int, int);//assuming these two tiles are adjacent, make them neighbors
+
 	void removeNeighbor(int, char); //which direction should i cut off from where i am?
 	void makeWall(int, int, int, int); //given robot position and impassable tile position, update the adjacency list
 	void deleteTile(int, int);
@@ -89,5 +91,5 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void printMap();
 	//returns a map for now, will return a vector later
 	//Map look(int, int);
-	vector<Tile> look(int, int, bool(&)[16]); //looks in all four directions from a given coordinate, then returns viewed tiles
+	vector<int> look(int, int); //looks in all four directions from a given coordinate, then returns viewed tiles
 };
