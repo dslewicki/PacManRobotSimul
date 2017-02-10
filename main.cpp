@@ -20,10 +20,10 @@ int main(){
 	const int MAP_SIZE = 25;
 	Map world(MAP_SIZE); //this is the actual map
 	Map memory(MAP_SIZE); //TEMPORARY: robot's memory
-	//bool visited[MAP_SIZE];
+	bool visited[MAP_SIZE];//an array to keep track which tiles have been visited
 
-	//for (int i=0;i<MAP_SIZE;i++)
-		//visited[i] = 0;
+	for (int i=0;i<MAP_SIZE;i++)
+		visited[i] = 0;
 
 	world.meetNGreet();
 	world.initialize();
@@ -35,7 +35,7 @@ int main(){
 	Pac pac;
 	world.setEntAt(0, &pac);
 	memory.setEntAt(0, &pac);
-	//visited[0] = true;
+	visited[0] = true;
 
 	vector<int> scanned;
 	Entity empty;
@@ -63,33 +63,7 @@ int main(){
 
 		origin = coordToIndex(row, col, world.getSqrtTiles());
 
-		//look and update the map
-		scanned = world.look(row,col); 
-		//connect each path from each direction
-		//places the found entities into the memory map
-		//deriving information from look()
-		
-
-
-		//every 2 numbers represent points from a direction, so the first 2 numbers are in the north direction
-		r1=indexToRownum(scanned[0], world.getSqrtTiles());
-		r2=indexToRownum(scanned[1], world.getSqrtTiles());
-		c1 = indexToColnum(scanned[0], world.getSqrtTiles());
-
-		//from r1 to r2, establish a valid path and identify any entities
-		for (int i = r1-1; i > r2; --i) {
-			int origin = coordToIndex(i+1, c1, world.getSqrtTiles());
-			memory.setEntAt(origin, world.getEntAt(origin));
-			memory.makeNeighbor((origin), world.getTileAt(origin).getNorth(), 'n');
-		}
-			//if the current scanned tile's ent has not changed, do not update
-			/*if (memory.getTileAt(scanned.at(i).getIndex()).getEnt() == scanned.at(i).getEnt())
-				;
-			else
-				memory.setTileAt(scanned.at(i).getIndex(), scanned.at(i));*/
-		
-		
-
+		//processes the controls
 		switch (KB_code)
 		{
 
@@ -196,6 +170,52 @@ int main(){
 			total += pv;
 			++time;
 		}
+
+		//look and update the map
+		scanned = world.look(row, col);
+		//connect each path from each direction
+		//places the found entities into the memory map
+		//deriving information from look()
+
+	//NORTH LOOK
+		//every 2 numbers represent points from a direction, so the first 2 numbers are in the north direction
+		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
+		r2 = indexToRownum(scanned.at(1), world.getSqrtTiles());
+		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
+		//cout << "r1= " << r1 << ", r2= " << r2 << ", c1= " << c1 << endl;
+		//from r1 to r2, establish a valid path and identify any entities
+		for (int i = 1; i <= r1 - r2; i++) {//e.g. from index 5 to index 2, subtract their rownums and count that many times
+			int north = coordToIndex(r1 - i, c1, world.getSqrtTiles());//look at the tile above
+			memory.setEntAt(north, world.getEntAt(north));//see whats inside
+			Tile insert = world.getTileAt(north);
+			if (visited[north] == false) {//if the robot has not moved here, pretend it does not see the other sides
+				insert.setEast(NULL);
+				insert.setWest(NULL);
+				visited[scanned.at(0)] = true;
+			}
+			memory.setTileAt(north, insert);
+		}
+
+//SOUTH LOOK
+		//every 2 numbers represent points from a direction, so the first 2 numbers are in the north direction
+		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
+		r2 = indexToRownum(scanned.at(2), world.getSqrtTiles());
+		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
+		//cout << "r1= " << r1 << ", r2= " << r2 << ", c1= " << c1 << endl;
+		//from r1 to r2, establish a valid path and identify any entities
+		for (int i = 1; i <= r2 - r1; i++) {//e.g. from index 5 to index 2, subtract their rownums and count that many times
+			int south = coordToIndex(r1 + i, c1, world.getSqrtTiles());//look at the tile above
+			memory.setEntAt(south, world.getEntAt(south));//see whats inside
+			Tile insert = world.getTileAt(south);
+			if (visited[south] == false) {//if the robot has not moved here, pretend it does not see the other sides
+				insert.setEast(NULL);
+				insert.setWest(NULL);
+				visited[scanned.at(0)] = true;
+			}
+			memory.setTileAt(south, insert);
+		}
+
+
 
 		cout << "Total Points: " << total << "	Time: " << time << endl;
 		memory.printMap();

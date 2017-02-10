@@ -378,6 +378,7 @@ vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->
 	int r = row, c = col, dest = 0;
 	bool deadend = false;
 	dest = coordToIndex(r, c, sqrtOfTiles);
+	//north loop
 	while (!deadend) {
 		if (tiles.at(dest).getNorth() != NULL) {
 			--r;
@@ -389,110 +390,25 @@ vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->
 	scanning.push_back(coordToIndex(row, c, sqrtOfTiles));
 	scanning.push_back(dest);
 
+//south loop
+	deadend = false, r = row, c = col, dest = coordToIndex(row, col, sqrtOfTiles);//reset vars
 
-	/*Tile nav(coordToIndex(r, c, sqrtOfTiles));
-	while (!deadend) {//for north
-		for (int i=0;i<25;i++)
-			cout << visited[i] <<", ";
-		cout << endl;
-
-		if (nav.getNorth() != NULL) {//increment and update current tile to the map/vector
-			r--;
+	while (!deadend) {
+		if (tiles.at(dest).getSouth() != NULL) {
+			++r;
 			dest = coordToIndex(r, c, sqrtOfTiles);
-			nav = getTileAt(dest);
-			//Tile insert = getTileAt(dest);
-			//adjusting for viewing in one direction
-			if (visited[dest] == false) {
-				nav.setEast(NULL);
-				nav.setWest(NULL);
-				//insert.setEast(NULL);
-				//insert.setWest(NULL);
-				visited[dest] = true;
-				cout << "visited 1";
-			}
-
-			scanning.push_back(nav);//scanning.push_back(insert);
-		}
-		else
-			deadend = true;	
-	}
-	deadend = false;
-	r = row;
-	c = col;
-	*/
-
-
-	//cout << "north works";
-
-	/*while (!deadend) {//for east
-		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getEast() != NULL) {//increment and update current tile to the map/vector
-			c++;
-			dest = coordToIndex(r, c, sqrtOfTiles);
-			Tile insert = getTileAt(dest);
-			//adjusting for viewing in one direction
-			if (visited[dest] == false) {
-				insert.setNorth(NULL);
-				insert.setSouth(NULL);
-				cout << "visited 2";
-			}
-			scanning.push_back(insert);
 		}
 		else
 			deadend = true;
 	}
+	scanning.push_back(dest);
 
-	deadend = false;
-	r = row;
-	c = col;
 
-	//cout << "east works";
 
-	while (!deadend) {//for south
-		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getSouth() != NULL) {//increment and update current tile to the map/vector
-			r++;
-			dest = coordToIndex(r, c, sqrtOfTiles);
-			Tile insert = getTileAt(dest);
-			//adjusting for viewing in one direction
-			if (visited[dest] == false) {
-				insert.setEast(NULL);
-				insert.setWest(NULL);
-				cout << "visited 3";
-			}
-			scanning.push_back(insert);
-		}
-		else
-			deadend = true;
-	}
-	deadend = false;
-	r = row;
-	c = col;
 
-	//cout << "south works";
-
-	while (!deadend) {//for west
-		if (tiles.at(coordToIndex(r, c, sqrtOfTiles)).getWest() != NULL) {//increment and update current tile to the map/vector
-			c--;
-			dest = coordToIndex(r, c, sqrtOfTiles);
-			Tile insert = getTileAt(dest);
-			//adjusting for viewing in one direction
-			if (visited[dest] == false) {
-				insert.setNorth(NULL);
-				insert.setSouth(NULL);
-				cout << "visited 3";
-			}
-			scanning.push_back(insert);
-		}
-		else
-			deadend = true;
-	}*/
-
-	//cout << "west works";
-				/*for (int i = 0; i < scanning.size(); i++) 
-					cout << scanning.at(i).getEnt()->getSymb() << ", ";
-				cout << endl;*/
-				
+	cout << "Indices: ";
 for (int i = 0; i < scanning.size(); i++)
-	cout << scanning.at(i)<< ", ";
+	cout <<scanning.at(i)<< ", ";
 cout << endl; 
 
 				return scanning;
