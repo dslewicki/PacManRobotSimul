@@ -2,6 +2,10 @@
 Simulated environment for the robot for the Pac-Man Robot competition.
 This program will be used to test the algorithm for the competition, and will possibly be implemented into the robot itself.
 
+02/09/2017
+Finally, the mapping works. The robot can now see in all directions appropiately, AND its refresh occurs before the movement instead of after.
+A fully comprehensive check has not been performed to confirm that the mapping is entirely bug-free, but now I can start working on the ghostses.
+
 02/02/2017
 I can detect walls from the north, but it does not draw it correctly.  I want to die.
 
