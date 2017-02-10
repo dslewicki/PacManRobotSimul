@@ -404,6 +404,31 @@ vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->
 	scanning.push_back(dest);
 
 
+//east loop
+	deadend = false, r = row, c = col, dest = coordToIndex(row, col, sqrtOfTiles);//reset vars
+
+	while (!deadend) {
+		if (tiles.at(dest).getEast() != NULL) {
+			++c;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+		}
+		else
+			deadend = true;
+	}
+	scanning.push_back(dest);
+
+//WEST loop
+	deadend = false, r = row, c = col, dest = coordToIndex(row, col, sqrtOfTiles);//reset vars
+
+	while (!deadend) {
+		if (tiles.at(dest).getWest() != NULL) {
+			--c;
+			dest = coordToIndex(r, c, sqrtOfTiles);
+		}
+		else
+			deadend = true;
+	}
+	scanning.push_back(dest);
 
 
 	cout << "Indices: ";

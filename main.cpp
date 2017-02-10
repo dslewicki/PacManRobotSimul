@@ -178,13 +178,12 @@ int main(){
 		//deriving information from look()
 
 	//NORTH LOOK
-		//every 2 numbers represent points from a direction, so the first 2 numbers are in the north direction
-		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
-		r2 = indexToRownum(scanned.at(1), world.getSqrtTiles());
-		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
+		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());//robot position rownum
+		r2 = indexToRownum(scanned.at(1), world.getSqrtTiles());//destination of north rownum
+		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());//robot position colnum
 		//cout << "r1= " << r1 << ", r2= " << r2 << ", c1= " << c1 << endl;
 		//from r1 to r2, establish a valid path and identify any entities
-		for (int i = 1; i <= r1 - r2; i++) {//e.g. from index 5 to index 2, subtract their rownums and count that many times
+		for (int i = 0; i <= r1 - r2; i++) {//e.g. from index 5 to index 2, subtract their rownums and count that many times
 			int north = coordToIndex(r1 - i, c1, world.getSqrtTiles());//look at the tile above
 			memory.setEntAt(north, world.getEntAt(north));//see whats inside
 			Tile insert = world.getTileAt(north);
@@ -197,13 +196,10 @@ int main(){
 		}
 
 //SOUTH LOOK
-		//every 2 numbers represent points from a direction, so the first 2 numbers are in the north direction
 		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
-		r2 = indexToRownum(scanned.at(2), world.getSqrtTiles());
+		r2 = indexToRownum(scanned.at(2), world.getSqrtTiles());//row of south destination
 		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
-		//cout << "r1= " << r1 << ", r2= " << r2 << ", c1= " << c1 << endl;
-		//from r1 to r2, establish a valid path and identify any entities
-		for (int i = 1; i <= r2 - r1; i++) {//e.g. from index 5 to index 2, subtract their rownums and count that many times
+		for (int i = 0; i <= r2 - r1; i++) {
 			int south = coordToIndex(r1 + i, c1, world.getSqrtTiles());//look at the tile above
 			memory.setEntAt(south, world.getEntAt(south));//see whats inside
 			Tile insert = world.getTileAt(south);
@@ -215,7 +211,37 @@ int main(){
 			memory.setTileAt(south, insert);
 		}
 
+//EAST LOOK
+		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
+		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
+		c2 = indexToColnum(scanned.at(3), world.getSqrtTiles());//colnum of destination east
+		for (int i = 0; i <= c2 - c1; i++) {
+			int east = coordToIndex(r1, c1+i, world.getSqrtTiles());//look at the tile above
+			memory.setEntAt(east, world.getEntAt(east));//see whats inside
+			Tile insert = world.getTileAt(east);
+			if (visited[east] == false) {//if the robot has not moved here, pretend it does not see the other sides
+				insert.setNorth(NULL);
+				insert.setSouth(NULL);
+				visited[scanned.at(0)] = true;
+			}
+			memory.setTileAt(east, insert);
+		}
 
+//WEST LOOK
+		r1 = indexToRownum(scanned.at(0), world.getSqrtTiles());
+		c1 = indexToColnum(scanned.at(0), world.getSqrtTiles());
+		c2 = indexToColnum(scanned.at(4), world.getSqrtTiles());//colnum of destination west
+		for (int i = 0; i <= c1 - c2; i++) {
+			int west = coordToIndex(r1, c1 - i, world.getSqrtTiles());//look at the tile above
+			memory.setEntAt(west, world.getEntAt(west));//see whats inside
+			Tile insert = world.getTileAt(west);
+			if (visited[west] == false) {//if the robot has not moved here, pretend it does not see the other sides
+				insert.setNorth(NULL);
+				insert.setSouth(NULL);
+				visited[scanned.at(0)] = true;
+			}
+			memory.setTileAt(west, insert);
+		}
 
 		cout << "Total Points: " << total << "	Time: " << time << endl;
 		memory.printMap();
