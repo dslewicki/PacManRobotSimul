@@ -106,21 +106,6 @@ string Tile::getStrNeighbors() {
 	return output;
 }
 
-Entity* Map::getEntAt(int index) {
-	return tiles.at(index).getEnt();
-}
-
-void Map::setEntAt(int index, Entity* insert) {
-	tiles.at(index).setEnt(insert);
-}
-
-Tile Map::getTileAt(int index) {
-	return tiles.at(index);
-}
-
-void Map::setTileAt(int index, Tile insert) {
-	tiles.at(index) = insert;
-}
 
 void Map::meetNGreet(){
 	for (int i = 0; i < totalTiles; i++)
@@ -167,21 +152,6 @@ void Map::makeNeighbor(int index, Tile *to_insert, char dir){
 		cout << "Out of range." << endl;
 	}
 }
-
-/*void Map::makeNeighbor(int r1, int c1, int r2, int c2) {
-	try {
-		tiles.at(index).setNeighbor(to_insert, dir);
-		//test code
-		if (dir == 'n') {
-			r = indexToRownum(index, sqrtOfTiles);
-			c = indexToColnum(index, sqrtOfTiles);
-			tiles.at(coordToIndex(r - 1, c, sqrtOfTiles)).setNeighbor(tiles.at(index).getSouth(), 's');
-		}//end test code
-	}
-	catch (std::out_of_range e) {
-		cout << "Out of range." << endl;
-	}
-}*/
 
 void Map::removeNeighbor(int index, char dir){
 	tiles.at(index).setNeighbor(NULL, dir);
@@ -234,7 +204,7 @@ void Map::printAdjList(){
 /*
 KEY:
 	--- and | are valid connections
-	$ is the robot
+	P is the robot
 	A B C D are the ghostses
 	* is a regular pellet
 	@ is a power pellet
@@ -258,8 +228,10 @@ void Map::printMap() {
 			if(j==0)
 				output1 += to_string(i) + " ";
 
-			output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
-			//output1 += to_string(tiles.at(j + i*(sqrtOfTiles)).getIndex());
+			if(tiles.at(j+i*(sqrtOfTiles)).getGhost()!=NULL)
+				output1 += tiles.at(j + i*(sqrtOfTiles)).getGhost()->getSymb();
+			else
+				output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
 			//if above tile connection is null, wall
 			if (tiles.at(j+i*sqrtOfTiles).getEast() == NULL)
 				output1 += "   ";
@@ -270,7 +242,6 @@ void Map::printMap() {
 				output2 += "    ";
 			else
 				output2 += "  | ";
-				//check for walls below
 		}
 		cout << output1 << endl;
 		cout << output2 << endl;
@@ -432,11 +403,11 @@ vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->
 
 
 	cout << "Indices: ";
-for (int i = 0; i < scanning.size(); i++)
-	cout <<scanning.at(i)<< ", ";
-cout << endl; 
+	for (int i = 0; i < scanning.size(); i++)
+		cout <<scanning.at(i)<< ", ";
+	cout << endl; 
 
-				return scanning;
-			}
+	return scanning;
+}
 		
 	

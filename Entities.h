@@ -68,23 +68,31 @@ public:
 
 
 class Roamer :public Entity {
-	friend class Map;
-	//Map memory; //robot/ghosts personal memory of the map
+	//i was going to make a private map class, but it wasnt necessary, as there are only two maps, our robot's and the world's
 public:
 	//map size to construct the memory map was hardcoded, sorry about that
 	Roamer() : Entity(){}
 	Roamer(int x, int y) : Entity(x, y) {}
 
+	//removed look(), as it was already implemented in main
 	void move();
-    void look();
-	//Map getMem() { return memory; };
 };
 
 class Pac :public Roamer {
 public:
 	Pac() :Roamer() {
-		setSymb('$');
+		setSymb('P');
 	}
 	Pac(int x, int y) :Roamer(x, y) {}
+
+};
+
+class Ghost :public Roamer {
+public:
+	Ghost() :Roamer() {
+		setSymb('G');
+		setPntVal(200);
+	}
+	Ghost(int x, int y) :Roamer(x, y) {}
 
 };

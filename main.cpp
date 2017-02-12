@@ -32,10 +32,16 @@ int main(){
 	//assumes that pacbot's location is instantly known
 
 	//variables for the controls
+
+	//sets up the pacbot and the ghostbots locations
 	Pac pac;
 	world.setEntAt(0, &pac);
 	memory.setEntAt(0, &pac);
 	visited[0] = true;
+
+	Ghost g1;
+	g1.setSymb('A');
+	world.setGhostAt(14, &g1);
 
 	vector<int> scanned;
 	Entity empty;
@@ -164,7 +170,7 @@ int main(){
 			}
 			else --row;
 			break;
-		}//end of switch
+		}//end of controls
 
 		if (KB_code != 224){
 			total += pv;

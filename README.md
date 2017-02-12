@@ -2,6 +2,11 @@
 Simulated environment for the robot for the Pac-Man Robot competition.
 This program will be used to test the algorithm for the competition, and will possibly be implemented into the robot itself.
 
+02/12/2017
+4:29 AM, realized I completely overlooked the fact that ghosts and dots can overlap, so I remedied that by adding another variable to hold
+ghosts and all the stuff that comes with that.  I still need an internship and I have exams constantly.  If you are a recruiter for any company
+that happens to be reading this, I swear I can be a lot more professional than this, and that I look great with your company logo.
+
 02/09/2017
 Finally, the mapping works. The robot can now see in all directions appropiately, AND its refresh occurs before the movement instead of after.
 A fully comprehensive check has not been performed to confirm that the mapping is entirely bug-free, but now I can start working on the ghostses.

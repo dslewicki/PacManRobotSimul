@@ -18,6 +18,7 @@ Contains the definitions of the following classes:
 
 class Tile{
 	Entity *val;
+	Ghost *ghost;
 	int indexVal;
 	Tile* north;
 	Tile* south;
@@ -27,29 +28,27 @@ class Tile{
 	vector<Tile*>::iterator iter;  //navigates thru the vector
 
 public:
+	//constructors for the tile
 	Tile(int index):indexVal(index) {}
 	Tile(Entity* ent,int index) : val(ent), indexVal(index){}
-
+	//tile stuff getters and setters
 	Entity* getEnt()		{ return val; }
 	void setEnt(Entity* e)	{ val = e; }
+	Ghost* getGhost()		{ return ghost; }
+	void setGhost(Ghost* g) { ghost = g; }
 	int getIndex()			{ return indexVal; }
-
+	//neighbor-related getters and setters
 	vector<Tile*> getNeighbors() { return neighbors; }
-
 	Tile* getNorth()		{ return north; }
 	Tile* getSouth()		{ return south; }
 	Tile* getWest()			{ return west; };
 	Tile* getEast()			{ return east; };
-
 	void setNorth(Tile* t) { north = t; }
 	void setSouth(Tile* t) { south = t; }
 	void setWest(Tile* t) { west = t; }
 	void setEast(Tile* t) { east = t; }
-
-
 	void setNeighbor(Tile*, char);
 	string getStrNeighbors();
-	//void removeNeighbor(Tile*, char);
 };
 
 class Map{
@@ -59,7 +58,6 @@ class Map{
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
 	Pellet p;
 	PwrPlt pp;
-
 public://the constructor sets up each tile, but does not "connect" them (no neighbors detected)
 	Map(int numOfVertices) :totalTiles(numOfVertices), sqrtOfTiles(sqrt(numOfVertices)) {
 		tiles.reserve(totalTiles);
@@ -71,11 +69,13 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 
 	void initialize();
 	int getSqrtTiles() { return sqrtOfTiles; }
-	Entity* getEntAt(int);
-	void setEntAt(int, Entity*);
 
-	Tile getTileAt(int);
-	void setTileAt(int, Tile);
+	Entity* getEntAt(int index) { return tiles.at(index).getEnt(); };
+	void setEntAt(int index, Entity* insert) { tiles.at(index).setEnt(insert); };
+	Ghost* getGhostAt(int index) { return tiles.at(index).getGhost(); };;
+	void setGhostAt(int index, Ghost* insert) { tiles.at(index).setGhost(insert); };;
+	Tile getTileAt(int index) { return tiles.at(index); };
+	void setTileAt(int index, Tile insert) { tiles.at(index) = insert; };
 
 	void meetNGreet(); //every tile in the map connects to their neighbors
 	
