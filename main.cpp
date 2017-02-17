@@ -32,27 +32,41 @@ int main(){
 	//assumes that pacbot's location is instantly known
 
 	//variables for the controls
-
 	//sets up the pacbot and the ghostbots locations
+
+	//original position indices
+	int pacPosOrig = 0,
+		g1PosOrig = 14;
+
+	//rows and columns
+	int r_pac = indexToRownum(pacPosOrig, world.getSqrtTiles());
+	int c_pac = indexToColnum(pacPosOrig, world.getSqrtTiles());
+	int r_ghost = indexToRownum(g1PosOrig, world.getSqrtTiles());
+	int c_ghost = indexToColnum(g1PosOrig, world.getSqrtTiles());
+
 	Pac pac;
-	world.setEntAt(0, &pac);
-	memory.setEntAt(0, &pac);
+	world.setEntAt(pacPosOrig, &pac);
+	memory.setEntAt(pacPosOrig, &pac);
 	visited[0] = true;
 
 	Ghost g1;
 	g1.setSymb('A');
-	world.setGhostAt(14, &g1);
+	world.setGhostAt(g1PosOrig, &g1);
+
 
 	vector<int> scanned;
 	Entity empty;
-	int row = 0;
-	int col = 0;
-	int current = 0;
-	int origin = 0;
-	int KB_code = 0;
-	int pv = 0;
-	int total= 0;
-	int time = 0;
+	int row = 0,
+		col = 0,
+		current = 0,
+		origin = 0,
+		KB_code = 0,
+		pv = 0,
+		total = 0,
+		time = 0,
+		lives = 3;
+	bool gameover = false;
+	
 
 	//variables for the look() results
 	int r1, r2, c1, c2;
@@ -63,7 +77,7 @@ int main(){
 	memory.printMap();
 
 	//controls
-	while (KB_code != KB_ESCAPE) {
+	while (KB_code != KB_ESCAPE && !gameover) {
 		KB_code = _getch();
 		printf("KB_code = %i \n", KB_code);
 
@@ -81,6 +95,8 @@ int main(){
 				++col;
 				break;
 			}
+
+			//TODO: update the ghost's/pacbot location(r,c) and make it appear on the map
 			//attempt a move, making sure to check if path exists in that direction
 			if (world.getTileAt(current).getEast() != NULL) {
 				//first get the point value from dest before moving
@@ -89,6 +105,8 @@ int main(){
 				//make the tile you just left marked as traveled
 				world.setEntAt(origin, &empty);
 
+				//the ghost location is known at all times
+				//memory.setGhostAt()
 				memory.setEntAt(current, &pac);
 				memory.setEntAt(origin, &empty);
 				//visited[origin] = true;
@@ -171,12 +189,23 @@ int main(){
 			else --row;
 			break;
 		}//end of controls
-
-		if (KB_code != 224){
+	
+		if (KB_code != 224) {
 			total += pv;
 			++time;
-		}
+			//}
 
+			r_pac = indexToRownum(current, world.getSqrtTiles());
+			c_pac = indexToColnum(current, world.getSqrtTiles());
+
+			cout << r_pac << ", " << c_pac << " : " << r_ghost << ", " << c_ghost << endl;
+			if (world.hasDied(r_pac, c_pac, r_ghost, c_ghost)) {
+				--lives;
+				//remove all the ghost from its current position and places it back into the original
+			}
+		}
+		if (lives == 0)
+			gameover = true;
 		//look and update the map
 		scanned = world.look(row, col);
 		//connect each path from each direction
@@ -249,10 +278,13 @@ int main(){
 			memory.setTileAt(west, insert);
 		}
 
-		cout << "Total Points: " << total << "	Time: " << time << endl;
+		cout << "Total Points: " << total << "	Time: " << time << "	Lives: "<< lives<<endl;
 		memory.printMap();
 		//world.printMap();
-	}
+	}//end of game
+
+	cout << "Total Points: " << total << "	Time: " << time << "	Lives: " << lives << endl;
+	cout << "L O S E R " << endl;
 
 	return 0;
 }

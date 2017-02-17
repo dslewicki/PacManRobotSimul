@@ -92,4 +92,5 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	//returns a map for now, will return a vector later
 	//Map look(int, int);
 	vector<int> look(int, int); //looks in all four directions from a given coordinate, then returns viewed tiles
+	bool hasDied(int, int, int, int);//given a ghost index and the pacbot index, if there is no wall, lose a life
 };

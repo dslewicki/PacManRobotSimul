@@ -12,6 +12,11 @@ this will be achieved by
 2. Removing all other directional pointers besides the direction it came from(only after the start of the game)
 3. and adding that tile object (not a reference/pointer) to the robot's internal map.
 
+02/16/2017
+So my roommate owes me and my other roommates >$1000, and we have video evidence of him agreeing to the bet with the terms clarified,
+AND he was not under any duress, and he refuses to pay.  Oh yeah, there is a game over function when the pacbot is adjacent to the ghost.
+Next step will be to get the ghost visible on the map no matter what, and then to automate movement.
+
 02/12/2017
 4:29 AM, realized I completely overlooked the fact that ghosts and dots can overlap, so I remedied that by adding another variable to hold
 ghosts and all the stuff that comes with that.  I still need an internship and I have exams constantly.  If you are a recruiter for any company

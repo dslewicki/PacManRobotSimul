@@ -317,7 +317,6 @@ void Map::deleteTile(int r, int c){
 		removeNeighbor(temp + 1, 'w'); //removes the neighbor of the target tile to the robot
 		removeNeighbor(temp, 'w');//remove the neighbor of this tile from the west
 		removeNeighbor(temp - 1, 'e'); //removes the neighbor of the target tile to the robot
-
 		removeNeighbor(temp, 's');
 		removeNeighbor(temp+sqrtOfTiles, 'n');
 		removeNeighbor(temp, 'n');
@@ -402,12 +401,43 @@ vector<int> Map::look(int row, int col) { //returns vectors of tiles from N->E->
 	scanning.push_back(dest);
 
 
-	cout << "Indices: ";
+	/*cout << "Indices: ";
 	for (int i = 0; i < scanning.size(); i++)
 		cout <<scanning.at(i)<< ", ";
-	cout << endl; 
+	cout << endl; */
 
 	return scanning;
 }
-		
 	
+bool Map::hasDied(int r_pac, int c_pac, int r_ghost, int c_ghost) {
+	int pacPos = coordToIndex(r_pac, c_pac, sqrtOfTiles);
+	if (r_pac == r_ghost) {
+		//cout << "same row" << endl;
+		if (c_pac - c_ghost == 1) {//if the ghost is to the left, check if there is wall on the left
+			if (getTileAt(pacPos).getWest() != NULL) {
+				return true;
+			}
+		}
+		if (c_pac - c_ghost == -1) {
+			if (getTileAt(pacPos).getEast() != NULL)
+				return true;
+		}
+	}
+
+	if (c_pac == c_ghost) {
+		//cout << "same col" << endl;
+		if (r_pac - r_ghost == 1) {//if the ghost is to the north
+			//cout << "ghost is above" << endl;
+			if (getTileAt(pacPos).getNorth() != NULL)
+				//cout << "RRRRRRRRRRR" << endl;
+				return true;
+		}
+		if (r_pac - r_ghost == -1) {
+			if (getTileAt(pacPos).getSouth() != NULL)
+				return true;
+		}
+	}
+	
+	return false;
+	
+}
