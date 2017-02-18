@@ -4,6 +4,12 @@ This program will be used to test the algorithm for the competition, and will po
 
 A note about how the ghosts will be used to help us map the maze:
 
+CURRENT BUGS:
+-(001-minor)If the bot keeps running against a wall after grabbing something worth points, the score will keep increasing by
+whatever it grabbed last.
+-a lot more that I don't remember right now
+
+
 This is actually pretty straightforward, as we know the ghosts' locations at all times.
 Because of this, we can see where they move.  This means that wherever the ghost moves,
 there exists no wall, and hence, a valid path.  In terms of implementation for the simulation,
@@ -11,6 +17,10 @@ this will be achieved by
 1. Getting the tile index the ghost is at
 2. Removing all other directional pointers besides the direction it came from(only after the start of the game)
 3. and adding that tile object (not a reference/pointer) to the robot's internal map.
+
+02/18/2017
+THON has started and I'm busy doing infinite amounts of work, like adding a buglist and moving some chunks of code like
+making a new look() function from the code in main.cpp to the Map.cpp.
 
 02/16/2017
 So my roommate owes me and my other roommates >$1000, and we have video evidence of him agreeing to the bet with the terms clarified,

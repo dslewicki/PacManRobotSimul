@@ -52,7 +52,7 @@ public:
 };
 
 class Map{
-	int totalTiles;
+	const int totalTiles;
 	int sqrtOfTiles;  //effectively the length/width of the grid, this will be used in all sorts of calculations
 	vector<Tile> tiles;
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
@@ -89,8 +89,7 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	vector<int> BFS(int, int, int, int);  //returns the shortest paths from A to B
 	void printAdjList();
 	void printMap();
-	//returns a map for now, will return a vector later
-	//Map look(int, int);
-	vector<int> look(int, int); //looks in all four directions from a given coordinate, then returns viewed tiles
+	vector<int> look(int, int); //takes info 4 directions from whatever map is calling it and returns it
+	void look(Map &realmap, vector<int>, bool[25]); //implements the vector look, and is what really reveals the map
 	bool hasDied(int, int, int, int);//given a ghost index and the pacbot index, if there is no wall, lose a life
 };
