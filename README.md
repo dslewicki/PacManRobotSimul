@@ -18,6 +18,14 @@ this will be achieved by
 2. Removing all other directional pointers besides the direction it came from(only after the start of the game)
 3. and adding that tile object (not a reference/pointer) to the robot's internal map.
 
+02/23/2017
+"Please make the exams stop, please."-me
+1. Fixed a bug where after pressing a key for the pacbot manual movement, it waited for a second and then moved.
+This was due _getch() returning a prefix of 224, and if you called it again, it would return the whole thing.  Like what.
+2. Made the ghost visible on the memory map by literally just adding it to the map.
+3. Starting work on automated movement for the ghosts
+
+
 02/18/2017
 THON has started and I'm busy doing infinite amounts of work, like adding a buglist and moving some chunks of code like
 making a new look() function from the code in main.cpp to the Map.cpp.

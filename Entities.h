@@ -1,15 +1,10 @@
-
-
 /*
 Contains info about the Pacman, Ghost, Dots, Powerups
 */
-
-
 class Entity{ //same thing as an empty space
 	char symb; 
 	int posX, posY, pntVal;
 	bool eatable;
-
 public:
 	Entity(): symb(' '), posX(0), posY(0), pntVal(0), eatable(true){}
 	Entity(int x, int y) : symb(' '), posX(x), posY(y), pntVal(0), eatable(true) {}
@@ -24,7 +19,6 @@ public:
 	void setPosY(int val)				{ posY = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
 	void setEatable(bool val)			{ eatable = val;  };
-	//virtual int gotEaten(); decided aganist making it abstract, as I was planning to treat the base entity as an empty tile
 };
 
 class Unknown : public Entity {
@@ -34,9 +28,8 @@ class Unknown : public Entity {
 class Consumable : public Entity {
 public:
 	Consumable() :Entity() {}
-
 	Consumable(int x, int y) :Entity(x, y) {}
-
+	//virtual void gotEaten(); might implement later, most likely not
 };
 
 class Pellet : public Consumable{
@@ -68,14 +61,11 @@ public:
 
 
 class Roamer :public Entity {
-	//i was going to make a private map class, but it wasnt necessary, as there are only two maps, our robot's and the world's
 public:
-	//map size to construct the memory map was hardcoded, sorry about that
 	Roamer() : Entity(){}
 	Roamer(int x, int y) : Entity(x, y) {}
 
-	//removed look(), as it was already implemented in main
-	void move();
+	virtual void move();
 };
 
 class Pac :public Roamer {

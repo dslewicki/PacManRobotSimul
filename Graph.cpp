@@ -228,8 +228,9 @@ void Map::printMap() {
 			if(j==0)
 				output1 += to_string(i) + " ";
 
-			if(tiles.at(j+i*(sqrtOfTiles)).getGhost()!=NULL)
+			if (tiles.at(j + i*(sqrtOfTiles)).getGhost() != NULL) {
 				output1 += tiles.at(j + i*(sqrtOfTiles)).getGhost()->getSymb();
+			}
 			else
 				output1 += tiles.at(j+i*(sqrtOfTiles)).getEnt()->getSymb();
 			//if above tile connection is null, wall

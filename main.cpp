@@ -8,11 +8,13 @@
 #define KB_LEFT 75
 #define KB_RIGHT 77
 #define KB_ESCAPE 27
+#define KB_TAB 15
+#define KB_SPACE 57 
 
 using std::cout;
 using std::endl;
 
-//todo:  implement an effective vision range for the "robot",[possibly redo the grid
+//todo: remake the grid, and implement a way to mirror one side of the map to the other
 
 int main(){
 
@@ -30,8 +32,6 @@ int main(){
 	world.initialize();
 
 //testing the robot
-	//assumes that pacbot's location is instantly known
-
 	//variables for the controls
 	//sets up the pacbot and the ghostbots locations
 
@@ -45,15 +45,17 @@ int main(){
 	int r_ghost = indexToRownum(g1PosOrig, world.getSqrtTiles());
 	int c_ghost = indexToColnum(g1PosOrig, world.getSqrtTiles());
 
+//robots being placed in the maps
 	Pac pac;
 	world.setEntAt(pacPosOrig, &pac);
 	memory.setEntAt(pacPosOrig, &pac);
 	visited[0] = true;
 
+	//when a ghost is initialized, make sure to put it in the memory map as well
 	Ghost g1;
 	g1.setSymb('A');
 	world.setGhostAt(g1PosOrig, &g1);
-
+	memory.setGhostAt(g1PosOrig, &g1);
 
 	//vector<int> scanned;
 	Entity empty;
@@ -78,8 +80,10 @@ int main(){
 	memory.printMap();
 
 	//controls
+
 	while (KB_code != KB_ESCAPE && !gameover) {
-		KB_code = _getch();
+		KB_code = _getch();//scans the keyboard input as an int
+		KB_code = _getch();//need to call it twice or it wont work properly (im serious)
 		printf("KB_code = %i \n", KB_code);
 
 		origin = coordToIndex(row, col, world.getSqrtTiles());
@@ -87,6 +91,11 @@ int main(){
 		switch (KB_code)
 		{
 
+		case KB_SPACE://increment simulation time by 1, basically just tap and watch
+			pac.move(); 
+			g1.move();
+
+		//cases for the arrows are manual movements
 		case KB_LEFT:
 			--col;
 			current = coordToIndex(row, col, world.getSqrtTiles());
