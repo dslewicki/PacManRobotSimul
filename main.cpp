@@ -9,7 +9,7 @@
 #define KB_RIGHT 77
 #define KB_ESCAPE 27
 #define KB_TAB 15
-#define KB_SPACE 57 
+#define KB_SPACE 32
 
 using std::cout;
 using std::endl;
@@ -83,7 +83,8 @@ int main(){
 
 	while (KB_code != KB_ESCAPE && !gameover) {
 		KB_code = _getch();//scans the keyboard input as an int
-		KB_code = _getch();//need to call it twice or it wont work properly (im serious)
+		if (KB_code == 224)
+			KB_code = _getch();//need to call it twice or it wont work properly (im serious)
 		printf("KB_code = %i \n", KB_code);
 
 		origin = coordToIndex(row, col, world.getSqrtTiles());
@@ -92,8 +93,17 @@ int main(){
 		{
 
 		case KB_SPACE://increment simulation time by 1, basically just tap and watch
-			pac.move(); 
-			g1.move();
+ /* the actual pacman wave phases
+ Scatter for 7 seconds, then Chase for 20 seconds.
+ Scatter for 7 seconds, then Chase for 20 seconds.
+Scatter for 5 seconds, then Chase for 20 seconds.
+ Scatter for 5 seconds, then switch to Chase mode permanently.
+ */
+			if (time == 0 || time == 27 || time == 54 || time == 79)
+				;//set the movephase to scatter
+	   else if (time == 7 || time == 34 || time == 59 || time == 84)
+				;//set the movephase to chase
+			break;
 
 		//cases for the arrows are manual movements
 		case KB_LEFT:
@@ -219,7 +229,7 @@ int main(){
 		//world.printMap();
 	}//end of game
 
-	cout << "Total Points: " << total << "	Time: " << time << "	Lives: " << lives << endl;
+	cout << "\a Total Points: " << total << "	Time: " << time << "	Lives: " << lives << endl;
 	cout << "L O S E R " << endl;
 
 	return 0;

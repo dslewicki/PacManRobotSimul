@@ -61,9 +61,15 @@ public:
 
 
 class Roamer :public Entity {
+	char prev_dir;
+
 public:
-	Roamer() : Entity(){}
-	Roamer(int x, int y) : Entity(x, y) {}
+	Roamer() : Entity(){
+		prev_dir = 0;
+	}
+	Roamer(int x, int y) : Entity(x, y) {
+		prev_dir = 0;
+	}
 
 	virtual void move();
 };
@@ -84,5 +90,6 @@ public:
 		setPntVal(200);
 	}
 	Ghost(int x, int y) :Roamer(x, y) {}
-
+	void move_scatter(); 
+	void move_chase();
 };
