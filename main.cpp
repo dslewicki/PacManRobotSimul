@@ -30,7 +30,15 @@ int main(){
 
 	world.meetNGreet();
 	world.initialize();
-
+	bool intersects[22];
+	intersects[6] = true,
+	intersects[8] = true,
+	intersects[11] = true,
+	intersects[12] = true,
+	intersects[13] = true,
+	intersects[17] = true,
+	intersects[21] = true,
+	intersects[22] = true;
 //testing the robot
 	//variables for the controls
 	//sets up the pacbot and the ghostbots locations
@@ -39,11 +47,12 @@ int main(){
 	int pacPosOrig = 0,
 		g1PosOrig = 14;
 
-	//rows and columns
+	//locations of the roamers
 	int r_pac = indexToRownum(pacPosOrig, world.getSqrtTiles());
 	int c_pac = indexToColnum(pacPosOrig, world.getSqrtTiles());
-	int r_ghost = indexToRownum(g1PosOrig, world.getSqrtTiles());
-	int c_ghost = indexToColnum(g1PosOrig, world.getSqrtTiles());
+	int r_g1 = indexToRownum(g1PosOrig, world.getSqrtTiles());
+	int c_g1 = indexToColnum(g1PosOrig, world.getSqrtTiles());
+	int g1_pos = g1PosOrig;
 
 //robots being placed in the maps
 	Pac pac;
@@ -68,8 +77,8 @@ int main(){
 		total = 0,
 		time = 0,
 		lives = 3;
-	bool gameover = false;
-	
+	bool gameover=false;
+	vector<char> otherpaths;
 
 	//variables for the look() results
 	//int r1, r2, c1, c2;
@@ -93,16 +102,39 @@ int main(){
 		{
 
 		case KB_SPACE://increment simulation time by 1, basically just tap and watch
- /* the actual pacman wave phases
- Scatter for 7 seconds, then Chase for 20 seconds.
- Scatter for 7 seconds, then Chase for 20 seconds.
-Scatter for 5 seconds, then Chase for 20 seconds.
- Scatter for 5 seconds, then switch to Chase mode permanently.
- */
+		/* the actual pacman wave phases
+		Scatter for 7 seconds, then Chase for 20 seconds.
+		Scatter for 7 seconds, then Chase for 20 seconds.
+		Scatter for 5 seconds, then Chase for 20 seconds.
+		Scatter for 5 seconds, then switch to Chase mode permanently.
+		 */
+			char prev = g1.getprev_dir();
+			int g1_dest = g1_pos;
+			if (prev = 'n') 
+				g1_dest = coordToIndex(r_g1 - 1, c_g1, world.getSqrtTiles());
+			if (prev = 's')
+				g1_dest = coordToIndex(r_g1 + 1, c_g1, world.getSqrtTiles());
+			if (prev = 'e')
+				g1_dest = coordToIndex(r_g1, c_g1+1, world.getSqrtTiles());
+			if (prev = 'w')
+				g1_dest = coordToIndex(r_g1, c_g1-1, world.getSqrtTiles());
+
+			otherpaths = world.wallExists(g1_pos, g1_dest);
+			//if there is a wall infront and you aren't at an intersection, try to orient to another valid direction
+			if (otherpaths.size() > 1)
+				cout<<'a';//TOODO
+				//change the prev_dir of the ghost to a valid path
+				//if(g1.rand_dir)
+			/*g1_pos=g1.move(g1_pos,pacPosOrig, intersects);
+			r_g1 = indexToRownum(g1_pos, world.getSqrtTiles());
+			c_g1 = indexToColnum(g1_pos, world.getSqrtTiles());*/
+
 			if (time == 0 || time == 27 || time == 54 || time == 79)
-				;//set the movephase to scatter
-	   else if (time == 7 || time == 34 || time == 59 || time == 84)
-				;//set the movephase to chase
+				cout << "scattering" << endl;
+			else if (time == 7 || time == 34 || time == 59 || time == 84)
+				cout << "chasing" << endl;
+
+
 			break;
 
 		//cases for the arrows are manual movements
@@ -213,8 +245,8 @@ Scatter for 5 seconds, then Chase for 20 seconds.
 			r_pac = indexToRownum(current, world.getSqrtTiles());
 			c_pac = indexToColnum(current, world.getSqrtTiles());
 
-			cout << r_pac << ", " << c_pac << " : " << r_ghost << ", " << c_ghost << endl;
-			if (world.hasDied(r_pac, c_pac, r_ghost, c_ghost)) {
+			cout << r_pac << ", " << c_pac << " : " << r_g1 << ", " << c_g1 << endl;
+			if (world.hasDied(r_pac, c_pac, r_g1, c_g1)) {
 				--lives;
 				//remove all the ghost from its current position and places it back into the original
 			}

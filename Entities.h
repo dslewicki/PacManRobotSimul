@@ -1,6 +1,8 @@
 /*
 Contains info about the Pacman, Ghost, Dots, Powerups
 */
+#include <stdlib.h>
+
 class Entity{ //same thing as an empty space
 	char symb; 
 	int posX, posY, pntVal;
@@ -70,8 +72,10 @@ public:
 	Roamer(int x, int y) : Entity(x, y) {
 		prev_dir = 0;
 	}
-
-	virtual void move();
+	char rand_dir();
+	char getprev_dir() { return prev_dir; }
+	void setprev_dir(char a) { prev_dir = a; }
+	//virtual void move();
 };
 
 class Pac :public Roamer {
@@ -84,12 +88,15 @@ public:
 };
 
 class Ghost :public Roamer {
+
 public:
 	Ghost() :Roamer() {
 		setSymb('G');
 		setPntVal(200);
 	}
 	Ghost(int x, int y) :Roamer(x, y) {}
-	void move_scatter(); 
-	void move_chase();
+	int move(int currentpos, int targetpos, bool[22]); //moves one tile towards target tile, uses an array of intersection tiles for speed
+	void move_scatter(int cornerpos); //the ghosts retreat to a corner of the map
+	void move_chase(int pacpos);
+	void move_frightened();
 };

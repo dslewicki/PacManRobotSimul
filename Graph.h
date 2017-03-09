@@ -41,8 +41,8 @@ public:
 	vector<Tile*> getNeighbors() { return neighbors; }
 	Tile* getNorth()		{ return north; }
 	Tile* getSouth()		{ return south; }
-	Tile* getWest()			{ return west; };
-	Tile* getEast()			{ return east; };
+	Tile* getWest()			{ return west; }
+	Tile* getEast()			{ return east; }
 	void setNorth(Tile* t) { north = t; }
 	void setSouth(Tile* t) { south = t; }
 	void setWest(Tile* t) { west = t; }
@@ -92,4 +92,5 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	vector<int> look(int, int); //takes info 4 directions from whatever map is calling it and returns it
 	void look(Map &realmap, vector<int>, bool[25]); //implements the vector look, and is what really reveals the map
 	bool hasDied(int, int, int, int);//given a ghost index and the pacbot index, if there is no wall, lose a life
+	vector<char> wallExists(int,int);//determines if a wall exists between those two tiles, returns other valid tiles
 };

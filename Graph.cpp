@@ -133,7 +133,22 @@ void Map::visitNeighbors(int index) { //connects all the tiles to their respecti
 		temp = &tiles.at(index + 1);
 		makeNeighbor(index, temp, 'e');
 	}
+}
 
+vector<char> Map::wallExists(int pos1, int pos2) {
+	vector<char> paths;
+	vector<Tile*> neighbors;
+	neighbors = tiles.at(pos1).getNeighbors();
+	for (int i = 0; i < neighbors.size(); i++)
+		if (pos2 == neighbors.at(i)->getIndex())
+			return paths;
+
+	neighbors = tiles.at(pos2).getNeighbors();
+	for (int i = 0; i < neighbors.size(); i++)
+		if (neighbors.at(i) != NULL)
+			paths.push_back(neighbors.at(i)->getIndex);
+
+	return paths;
 }
 
 

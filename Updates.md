@@ -10,6 +10,11 @@ This was due _getch() returning a prefix of 224, and if you called it again, it 
 THON has started and I'm busy doing infinite amounts of work, like adding a buglist and moving some chunks of code like
 making a new look() function from the code in main.cpp to the Map.cpp.
 
+03/09/2017
+-Made a function isWall() that determines whether or not there is a wall between two tiles, and returns other connections if there is a wall
+-Made some progress on the general ghost movement
+-i want to die
+
 03/07/2017
 had to get some hw done before working on this, anyhway
 
