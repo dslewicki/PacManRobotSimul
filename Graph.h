@@ -43,6 +43,10 @@ public:
 	Tile* getSouth()		{ return south; }
 	Tile* getWest()			{ return west; }
 	Tile* getEast()			{ return east; }
+	bool isNorthOf(int otherTilePos) { if (this->getSouth()->getIndex() == otherTilePos) return true; return false; }
+	bool isSouthOf(int otherTilePos) { if (this->getNorth()->getIndex() == otherTilePos) return true; return false; }
+	bool isEastOf(int otherTilePos) { if (this->getWest()->getIndex() == otherTilePos) return true; return false; }
+	bool isWestOf(int otherTilePos) { if (this->getEast()->getIndex() == otherTilePos) return true; return false; }
 	void setNorth(Tile* t) { north = t; }
 	void setSouth(Tile* t) { south = t; }
 	void setWest(Tile* t) { west = t; }
@@ -74,6 +78,7 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void setEntAt(int index, Entity* insert) { tiles.at(index).setEnt(insert); };
 	Ghost* getGhostAt(int index) { return tiles.at(index).getGhost(); };;
 	void setGhostAt(int index, Ghost* insert) { tiles.at(index).setGhost(insert); };;
+	void removeGhostAt(int index) { tiles.at(index).setGhost(NULL); }
 	Tile getTileAt(int index) { return tiles.at(index); };
 	void setTileAt(int index, Tile insert) { tiles.at(index) = insert; };
 
@@ -93,4 +98,5 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	void look(Map &realmap, vector<int>, bool[25]); //implements the vector look, and is what really reveals the map
 	bool hasDied(int, int, int, int);//given a ghost index and the pacbot index, if there is no wall, lose a life
 	vector<char> wallExists(int,int);//determines if a wall exists between those two tiles, returns other valid tiles
+	vector<char> validPathsAt(int);//returns all valid paths of a certain tile
 };

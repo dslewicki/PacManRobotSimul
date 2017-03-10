@@ -2,6 +2,11 @@
 Contains info about the Pacman, Ghost, Dots, Powerups
 */
 #include <stdlib.h>
+#include "coordindex.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 class Entity{ //same thing as an empty space
 	char symb; 
@@ -63,19 +68,19 @@ public:
 
 
 class Roamer :public Entity {
-	char prev_dir;
+	char dir;
 
 public:
 	Roamer() : Entity(){
-		prev_dir = 0;
+		dir = 'n';
 	}
 	Roamer(int x, int y) : Entity(x, y) {
-		prev_dir = 0;
+		dir = 'n';
 	}
 	char rand_dir();
-	char getprev_dir() { return prev_dir; }
-	void setprev_dir(char a) { prev_dir = a; }
-	//virtual void move();
+	char get_dir() { return dir; }
+	void set_dir(char a) { dir = a; }
+	int advance(int current, char dir);//advances one tile in specified direction, returns the end tile
 };
 
 class Pac :public Roamer {

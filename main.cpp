@@ -1,7 +1,5 @@
 #include "Graph.h"
-#include <iostream>
 #include <conio.h>
-#include "coordindex.h"
 
 #define KB_UP 72
 #define KB_DOWN 80
@@ -11,8 +9,6 @@
 #define KB_TAB 15
 #define KB_SPACE 32
 
-using std::cout;
-using std::endl;
 
 //todo: remake the grid, and implement a way to mirror one side of the map to the other
 
@@ -31,6 +27,8 @@ int main(){
 	world.meetNGreet();
 	world.initialize();
 	bool intersects[22];
+	for (int i = 0; i < 22; i++)
+		intersects[i] = false;
 	intersects[6] = true,
 	intersects[8] = true,
 	intersects[11] = true,
@@ -53,6 +51,7 @@ int main(){
 	int r_g1 = indexToRownum(g1PosOrig, world.getSqrtTiles());
 	int c_g1 = indexToColnum(g1PosOrig, world.getSqrtTiles());
 	int g1_pos = g1PosOrig;
+	int g1_prevpos = g1PosOrig;
 
 //robots being placed in the maps
 	Pac pac;
@@ -66,7 +65,6 @@ int main(){
 	world.setGhostAt(g1PosOrig, &g1);
 	memory.setGhostAt(g1PosOrig, &g1);
 
-	//vector<int> scanned;
 	Entity empty;
 	int row = 0,
 		col = 0,
@@ -78,10 +76,12 @@ int main(){
 		time = 0,
 		lives = 3;
 	bool gameover=false;
-	vector<char> otherpaths;
 
-	//variables for the look() results
-	//int r1, r2, c1, c2;
+	//stuff for the kb space
+	vector<char> otherpaths = {};
+	char prev = g1.get_dir();
+	char backwards = '$';//arbitrary value
+	int g1_dest = g1_pos;
 
 	//print out starting map
 	memory.look(toWorld, world.look(row, col), visited);//scanned = world.look(row, col);
@@ -108,26 +108,44 @@ int main(){
 		Scatter for 5 seconds, then Chase for 20 seconds.
 		Scatter for 5 seconds, then switch to Chase mode permanently.
 		 */
-			char prev = g1.getprev_dir();
-			int g1_dest = g1_pos;
-			if (prev = 'n') 
+			if (prev = 'n') {
 				g1_dest = coordToIndex(r_g1 - 1, c_g1, world.getSqrtTiles());
-			if (prev = 's')
+				backwards = 's';
+			}
+			else if (prev = 's') {
 				g1_dest = coordToIndex(r_g1 + 1, c_g1, world.getSqrtTiles());
-			if (prev = 'e')
-				g1_dest = coordToIndex(r_g1, c_g1+1, world.getSqrtTiles());
-			if (prev = 'w')
-				g1_dest = coordToIndex(r_g1, c_g1-1, world.getSqrtTiles());
-
-			otherpaths = world.wallExists(g1_pos, g1_dest);
-			//if there is a wall infront and you aren't at an intersection, try to orient to another valid direction
-			if (otherpaths.size() > 1)
-				cout<<'a';//TOODO
-				//change the prev_dir of the ghost to a valid path
-				//if(g1.rand_dir)
-			/*g1_pos=g1.move(g1_pos,pacPosOrig, intersects);
+				backwards = 'n';
+			}
+			else if (prev = 'e') {
+				g1_dest = coordToIndex(r_g1, c_g1 + 1, world.getSqrtTiles());
+				backwards='w';
+			}
+			else if (prev = 'w') {
+				g1_dest = coordToIndex(r_g1, c_g1 - 1, world.getSqrtTiles());
+				backwards ='e';
+			}
+			//cout << g1_pos << g1_dest;
+			otherpaths=world.wallExists(g1_pos, g1_dest);
+			//for (int i = 0; i < otherpaths.size(); i++)
+				//cout << otherpaths.at(i);
+			//if there is a wall infront, orient to another valid destination
+			if (otherpaths.size() > 1) {
+				g1.rand_dir();
+				for (int i = 0; i < otherpaths.size(); i++)
+					if (otherpaths[i] != backwards) //change its direction so its not hitting a wall or going backwards
+						g1.set_dir(otherpaths[i]);
+			}
+			
+			g1_pos=g1.move(g1_pos,pacPosOrig, intersects);
 			r_g1 = indexToRownum(g1_pos, world.getSqrtTiles());
-			c_g1 = indexToColnum(g1_pos, world.getSqrtTiles());*/
+			c_g1 = indexToColnum(g1_pos, world.getSqrtTiles());
+			//update the map
+			world.setGhostAt(g1_pos, &g1);
+			world.removeGhostAt(g1_prevpos);
+			memory.setGhostAt(g1_pos, &g1);
+			memory.removeGhostAt(g1_prevpos);
+			g1_prevpos = g1_pos;
+
 
 			if (time == 0 || time == 27 || time == 54 || time == 79)
 				cout << "scattering" << endl;
@@ -147,7 +165,6 @@ int main(){
 				break;
 			}
 
-			//TODO: update the ghost's/pacbot location(r,c) and make it appear on the map
 			//attempt a move, making sure to check if path exists in that direction
 			if (world.getTileAt(current).getEast() != NULL) {
 				//first get the point value from dest before moving
@@ -237,7 +254,7 @@ int main(){
 			break;
 		}//end of controls
 	
-		if (KB_code != 224) {//TODO: cause of bug 001, adjust if clause
+		if (KB_code != 224) {
 			total += pv;
 			++time;
 			//}

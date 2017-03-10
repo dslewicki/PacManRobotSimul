@@ -135,19 +135,42 @@ void Map::visitNeighbors(int index) { //connects all the tiles to their respecti
 	}
 }
 
+vector<char> Map::validPathsAt(int pos) {
+	vector<Tile*> neighbors;
+	vector<char> paths;
+	neighbors = tiles.at(pos).getNeighbors();
+	
+	for (int i = 0; i < neighbors.size(); i++){
+		if (neighbors.at(i) == tiles.at(pos).getNorth())
+			paths.push_back('n');
+		if (neighbors.at(i) == tiles.at(pos).getSouth())
+			paths.push_back('s');
+		if (neighbors.at(i) == tiles.at(pos).getEast())
+			paths.push_back('e');
+		if (neighbors.at(i) == tiles.at(pos).getWest())
+			paths.push_back('w');
+		}
+	return paths;
+}
+
 vector<char> Map::wallExists(int pos1, int pos2) {
 	vector<char> paths;
 	vector<Tile*> neighbors;
-	neighbors = tiles.at(pos1).getNeighbors();
-	for (int i = 0; i < neighbors.size(); i++)
+
+	neighbors = tiles.at(pos1).getNeighbors();//get the neighbors for the first tile, and see if there is a connection to pos2
+	//for (int i = 0; i < neighbors.size(); i++)
+		//cout << neighbors.at(i)->getIndex();
+	if (pos2 == -1) //if out of grid
+		return validPathsAt(pos1);
+	
+	
+	for (int i = 0; i < neighbors.size(); i++) {
 		if (pos2 == neighbors.at(i)->getIndex())
-			return paths;
+			return{};//if there is a connection, then return an empty vector to show there is no wall between the two
 
-	neighbors = tiles.at(pos2).getNeighbors();
-	for (int i = 0; i < neighbors.size(); i++)
-		if (neighbors.at(i) != NULL)
-			paths.push_back(neighbors.at(i)->getIndex);
-
+		else
+			return validPathsAt(pos1);
+		}
 	return paths;
 }
 
