@@ -43,13 +43,13 @@ int main(){
 
 	//original position indices
 	int pacPosOrig = 0,
-		g1PosOrig = 21;
+		g1PosOrig = 22;
 
 	//locations of the roamers
 	int r_pac = indexToRownum(pacPosOrig, world.getSqrtTiles());
 	int c_pac = indexToColnum(pacPosOrig, world.getSqrtTiles());
-	int r_g1 = indexToRownum(g1PosOrig, world.getSqrtTiles());
-	int c_g1 = indexToColnum(g1PosOrig, world.getSqrtTiles());
+	//int r_g1 = indexToRownum(g1PosOrig, world.getSqrtTiles());
+	//int c_g1 = indexToColnum(g1PosOrig, world.getSqrtTiles());
 	int g1_pos = g1PosOrig;
 	int g1_prevpos = g1PosOrig;
 
@@ -83,7 +83,7 @@ int main(){
 	char backwards = '$';//arbitrary value
 	int g1_dest = g1_pos;
 	bool corrected = false;//used to adjust move()
-
+	int prev_dest = -1;
 	//print out starting map
 	memory.look(toWorld, world.look(row, col), visited);//scanned = world.look(row, col);
 	world.printMap();
@@ -109,7 +109,9 @@ int main(){
 		Scatter for 5 seconds, then Chase for 20 seconds.
 		Scatter for 5 seconds, then switch to Chase mode permanently.
 		 */
-			if (direction == 'n') {
+			g1_dest=g1.adjustDestination(direction);
+			backwards = g1.getBackwards();
+			/*if (direction == 'n') { //old code, just hide this
 				g1_dest = coordToIndex(r_g1 - 1, c_g1, world.getSqrtTiles());
 				backwards = 's';
 			}
@@ -124,12 +126,21 @@ int main(){
 			 if (direction == 'w') {
 				g1_dest = coordToIndex(r_g1, c_g1 - 1, world.getSqrtTiles());
 				backwards = 'e';
-			}
+			}*/
 			 //cout << direction << backwards << endl;//DEBUG
 			 //cout << g1.get_dir(); //DEBUG
-			cout << "uncorrected "<<g1_dest<<", "<<direction<<endl;//DEBUG
-			otherpaths=world.wallExists(g1_pos, g1_dest);
 		
+			  prev_dest= world.wallAhead(&g1, g1_dest);
+			  //cout << g1_dest <<endl<< prev_dest;
+			if (g1_dest != prev_dest)//if its been corrected
+				corrected = true;
+			g1_dest = prev_dest;
+			direction = g1.get_dir();
+			backwards = g1.getBackwards();
+			cout << direction<< endl; //DEBUG
+			cout << backwards<< endl;//DEBUG
+			 //cout << "uncorrected "<<g1_dest<<", "<<direction<<endl;//DEBUG
+			/*otherpaths=world.wallExists(g1_pos, g1_dest); //old code
 			//if there is a wall infront, orient to another valid destination
 			if (otherpaths.size() > 1) {
 				g1.rand_dir();
@@ -155,14 +166,14 @@ int main(){
 						i = otherpaths.size();
 
 						corrected = true;
-						cout << "corrected " << g1_dest <<","<<direction<<endl;
+						//cout << "corrected " << g1_dest <<","<<direction<<endl;//DEBUG
 						//exit after the first instance
 					}
-				//cout << g1.get_dir() << endl;
-				//cout << backwards << endl;
-			}
+				//cout << g1.get_dir() << endl; //DEBUG
+				//cout << backwards << endl;//DEBUG
+			}*/
 			//make sure it never moves backwards, except for the special tiles (that may be implemented)
-			//if(direction==backwards)
+			
 			
 			if (intersects[g1_pos]) {//incase it moves backwards due to intersection, correct it
 				int temppos = g1_pos;
@@ -200,8 +211,8 @@ int main(){
 			}else
 				g1_pos = g1.move(g1_pos, pacPosOrig, intersects, corrected);
 			direction = g1.get_dir();
-			r_g1 = indexToRownum(g1_pos, world.getSqrtTiles());
-			c_g1 = indexToColnum(g1_pos, world.getSqrtTiles());
+			g1.set_rowpos(indexToRownum(g1_pos, world.getSqrtTiles()));
+			g1.set_colpos(indexToColnum(g1_pos, world.getSqrtTiles()));
 			//update the map
 			world.setGhostAt(g1_pos, &g1);
 			world.removeGhostAt(g1_prevpos);
@@ -325,8 +336,8 @@ int main(){
 			r_pac = indexToRownum(current, world.getSqrtTiles());
 			c_pac = indexToColnum(current, world.getSqrtTiles());
 
-			cout << r_pac << ", " << c_pac << " : " << r_g1 << ", " << c_g1 << endl;
-			if (world.hasDied(r_pac, c_pac, r_g1, c_g1)) {
+			cout << r_pac << ", " << c_pac << " : " << g1.get_rowpos() << ", " << g1.get_rowpos() << endl;
+			if (world.hasDied(r_pac, c_pac, g1.get_rowpos(), g1.get_colpos())) {
 				--lives;
 				//remove all the ghost from its current position and places it back into the original
 			}

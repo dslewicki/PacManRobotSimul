@@ -1,5 +1,26 @@
 #include "Entities.h"
-#define MAP_SIZE 5//by 5
+int Ghost::adjustDestination(char dir) {
+	int g_dest = -1;
+	//cout << get_rowpos() << endl << get_colpos();
+	if (dir == 'n') {
+		g_dest = coordToIndex(get_rowpos() - 1, get_colpos(), MAP_DIM);
+		setBackwards('s');
+	}
+	if (dir == 's') {
+		g_dest = coordToIndex(get_rowpos() + 1, get_colpos(), MAP_DIM);
+		setBackwards('n');
+	}
+	if (dir == 'e') {
+		g_dest = coordToIndex(get_rowpos(), get_colpos() + 1, MAP_DIM);
+		setBackwards('w');
+	}
+	if (dir == 'w') {
+		g_dest = coordToIndex(get_rowpos(), get_colpos() - 1, MAP_DIM);
+		setBackwards('e');
+	}
+	//cout << g_dest;
+	return g_dest;
+}
 char Roamer::rand_dir() {
 	int rando;
 	int prev=-1;
@@ -44,8 +65,8 @@ char Roamer::rand_dir() {
 }
 
 int Roamer::advance(int current, char dir){
-	int r=indexToRownum(current, MAP_SIZE);
-	int c=indexToColnum(current, MAP_SIZE);
+	int r=indexToRownum(current, MAP_DIM);
+	int c=indexToColnum(current, MAP_DIM);
 	if (dir == 'n')
 		--r;
 	if (dir == 's')
@@ -55,7 +76,7 @@ int Roamer::advance(int current, char dir){
 	if (dir == 'w')
 		--c;
 
-	return coordToIndex(r, c, MAP_SIZE);
+	return coordToIndex(r, c, MAP_DIM);
 	
 }
 
@@ -93,7 +114,7 @@ int Ghost::move(int currentpos, int targetpos, bool intersects[22], bool correct
 		else if (abs(r_target - r_ghost) == abs(c_target - c_ghost))//incase equal distance
 			set_dir('n');
 
-		cout << "inter " << get_dir();//DEBUG
+		//cout << "inter " << get_dir();//DEBUG
 	}
 
 

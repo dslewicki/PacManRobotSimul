@@ -75,9 +75,9 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	int getSqrtTiles() { return sqrtOfTiles; }
 
 	Entity* getEntAt(int index) { return tiles.at(index).getEnt(); };
-	void setEntAt(int index, Entity* insert) { tiles.at(index).setEnt(insert); };
+	void setEntAt(int index, Entity* insert);
 	Ghost* getGhostAt(int index) { return tiles.at(index).getGhost(); };;
-	void setGhostAt(int index, Ghost* insert) { tiles.at(index).setGhost(insert); };;
+	void setGhostAt(int index, Ghost* insert);
 	void removeGhostAt(int index) { tiles.at(index).setGhost(NULL); }
 	Tile getTileAt(int index) { return tiles.at(index); };
 	void setTileAt(int index, Tile insert) { tiles.at(index) = insert; };
@@ -99,4 +99,6 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	bool hasDied(int, int, int, int);//given a ghost index and the pacbot index, if there is no wall, lose a life
 	vector<char> wallExists(int,int);//determines if a wall exists between those two tiles, returns other valid tiles
 	vector<char> validPathsAt(int);//returns all valid paths of a certain tile
+	int wallAhead(Ghost*, int to_pos);//determines if there is a wall ahead and recalculates the route (for ghost right now)
+	int moveGhost(Ghost*);
 };

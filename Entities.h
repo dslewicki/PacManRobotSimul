@@ -5,25 +5,27 @@ Contains info about the Pacman, Ghost, Dots, Powerups
 #include "coordindex.h"
 #include <iostream>
 
+#define MAP_DIM 5//by 5
+
 using std::cout;
 using std::endl;
 
 class Entity{ //same thing as an empty space
 	char symb; 
-	int posX, posY, pntVal;
+	int rowpos, colpos, pntVal;
 	bool eatable;
 public:
-	Entity(): symb(' '), posX(0), posY(0), pntVal(0), eatable(true){}
-	Entity(int x, int y) : symb(' '), posX(x), posY(y), pntVal(0), eatable(true) {}
+	Entity(): symb(' '), rowpos(-1), colpos(-1), pntVal(0), eatable(true){}
+	Entity(int r, int c) : symb(' '), rowpos(r), colpos(c) , pntVal(0), eatable(true) {}
 	char getSymb()						{ return symb; };
-	int getPosX()						{ return posX; };
-	int getPosY()						{ return posY; };
+	int get_rowpos()						{ return rowpos; };
+	int get_colpos()						{ return colpos; };
 	int getPntVal()						{ return pntVal; };
 	bool isEatable()					{ return eatable; };
 
 	void setSymb(char val)			{ symb = val; };
-	void setPosX(int val)				{ posX = val;  };
-	void setPosY(int val)				{ posY = val;  };
+	void set_rowpos(int val)				{ rowpos = val;  };
+	void set_colpos(int val)				{ colpos = val;  };
 	void setPntVal(int val)				{ pntVal = val;  };
 	void setEatable(bool val)			{ eatable = val;  };
 };
@@ -69,7 +71,6 @@ public:
 
 class Roamer :public Entity {
 	char dir;
-
 public:
 	Roamer() : Entity(){
 		dir = 'n';
@@ -77,6 +78,7 @@ public:
 	Roamer(int x, int y) : Entity(x, y) {
 		dir = 'n';
 	}
+
 	char rand_dir();
 	char get_dir() { return dir; }
 	void set_dir(char a) { dir = a; }
@@ -93,13 +95,19 @@ public:
 };
 
 class Ghost :public Roamer {
-
+	char direction, backwards;
 public:
 	Ghost() :Roamer() {
 		setSymb('G');
 		setPntVal(200);
+		direction = 'n';
+		backwards = 's';
 	}
 	Ghost(int x, int y) :Roamer(x, y) {}
+	int adjustDestination(char dir);//sets direction and backwards, then returns the next tile in that direction
+	void setBackwards(char back) { backwards = back; };
+	char getDirection() { return direction; }
+	char getBackwards() { return backwards; }
 	int move(int currentpos, int targetpos, bool[22], bool corrected); //moves one tile towards target tile, uses an array of intersection tiles for speed, target is usually pacbot
 	void move_scatter(int cornerpos); //the ghosts retreat to a corner of the map
 	void move_chase(int pacpos);

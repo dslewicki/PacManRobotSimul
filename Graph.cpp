@@ -107,6 +107,18 @@ string Tile::getStrNeighbors() {
 }
 
 
+void Map::setEntAt(int index, Entity* insert){
+	tiles.at(index).setEnt(insert);
+	insert->set_rowpos(indexToRownum(index, sqrtOfTiles));
+	insert->set_colpos(indexToColnum(index, sqrtOfTiles));
+}
+
+void Map::setGhostAt(int index, Ghost* insert) {
+	tiles.at(index).setGhost(insert);
+	insert->set_rowpos(indexToRownum(index, sqrtOfTiles));
+	insert->set_colpos(indexToColnum(index, sqrtOfTiles));
+}
+
 void Map::meetNGreet(){
 	for (int i = 0; i < totalTiles; i++)
 		visitNeighbors(i);
@@ -169,6 +181,41 @@ vector<char> Map::wallExists(int pos1, int pos2) {
 	}
 
 	return validPathsAt(pos1);
+}
+
+int Map::wallAhead(Ghost* g, int g_dest){
+	int r_g= g->get_rowpos(), c_g= g->get_colpos();
+
+	vector<char>otherpaths = wallExists(coordToIndex(r_g,c_g,sqrtOfTiles),g_dest);
+
+	//if there is a wall infront, orient to another valid destination
+	if (otherpaths.size() > 1) {
+		g->rand_dir();
+		//for (int i = 0; i < otherpaths.size(); i++) //DEBUG
+		//cout << otherpaths.at(i) << endl;
+		for (int i = 0; i < otherpaths.size(); i++) {
+			if (otherpaths[i] != g->getBackwards()) { //change its direction so its not hitting a wall or going backwards
+				g->set_dir(otherpaths[i]);
+				char direction = g->get_dir();
+				if (direction == 'n')
+					g_dest = coordToIndex(r_g - 1, c_g, sqrtOfTiles);
+
+				if (direction == 's')
+					g_dest = coordToIndex(r_g + 1, c_g, sqrtOfTiles);
+
+				if (direction == 'e')
+					g_dest = coordToIndex(r_g, c_g + 1, sqrtOfTiles);
+
+				if (direction == 'w')
+					g_dest = coordToIndex(r_g, c_g - 1, sqrtOfTiles);
+
+				i = otherpaths.size();
+			}
+				//cout << "corrected " << g1_dest <<","<<direction<<endl;//DEBUG
+				//exit after the first instance		
+		}
+		return g_dest;
+	}
 }
 
 
