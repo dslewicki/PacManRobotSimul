@@ -100,7 +100,7 @@ public:
 		setPntVal(200);
 	}
 	Ghost(int x, int y) :Roamer(x, y) {}
-	int move(int currentpos, int targetpos, bool[22]); //moves one tile towards target tile, uses an array of intersection tiles for speed
+	int move(int currentpos, int targetpos, bool[22], bool corrected); //moves one tile towards target tile, uses an array of intersection tiles for speed, target is usually pacbot
 	void move_scatter(int cornerpos); //the ghosts retreat to a corner of the map
 	void move_chase(int pacpos);
 	void move_frightened();

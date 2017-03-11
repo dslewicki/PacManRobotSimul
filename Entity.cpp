@@ -54,6 +54,7 @@ int Roamer::advance(int current, char dir){
 		++c;
 	if (dir == 'w')
 		--c;
+
 	return coordToIndex(r, c, MAP_SIZE);
 	
 }
@@ -68,16 +69,15 @@ void Ghost::move_chase(int pacpos) {
 
 //void Roamer::move() {	;}
 
-int Ghost::move(int currentpos, int targetpos, bool intersects[22]){//generic movement pattern, direction priority is up>left>down when heading towards target	
+//TODO:include no pass upwards tiles
+int Ghost::move(int currentpos, int targetpos, bool intersects[22], bool corrected){//generic movement pattern, direction priority is up>left>down when heading towards target	
 	//move one tile in given direction, if no direction is given, draw a line to the target, and choose the shortest x or y component
 	int r_target = indexToRownum(targetpos, 5);
 	int c_target = indexToColnum(targetpos, 5);
 	int r_ghost = indexToRownum(currentpos, 5);
 	int c_ghost = indexToColnum(currentpos, 5);
 
-	cout << get_dir();
-
-	if (intersects[currentpos]) {
+	if (intersects[currentpos] && !corrected) {
 		if (abs(r_target - r_ghost) > abs(c_target - c_ghost)) {//if the horizontal distance is shorter, go east or west
 			if (c_target > c_ghost) //if the target is to the right of the ghost
 				set_dir('e');
@@ -90,9 +90,13 @@ int Ghost::move(int currentpos, int targetpos, bool intersects[22]){//generic mo
 			else
 				set_dir('s');
 		}
-		else //incase equal distance
+		else if (abs(r_target - r_ghost) == abs(c_target - c_ghost))//incase equal distance
 			set_dir('n');
+
+		cout << "inter " << get_dir();//DEBUG
 	}
+
+
 	return advance(currentpos, get_dir());
 
 }

@@ -43,7 +43,7 @@ int main(){
 
 	//original position indices
 	int pacPosOrig = 0,
-		g1PosOrig = 14;
+		g1PosOrig = 21;
 
 	//locations of the roamers
 	int r_pac = indexToRownum(pacPosOrig, world.getSqrtTiles());
@@ -79,9 +79,10 @@ int main(){
 
 	//stuff for the kb space
 	vector<char> otherpaths = {};
-	char prev = g1.get_dir();
+	char direction = g1.get_dir();
 	char backwards = '$';//arbitrary value
 	int g1_dest = g1_pos;
+	bool corrected = false;//used to adjust move()
 
 	//print out starting map
 	memory.look(toWorld, world.look(row, col), visited);//scanned = world.look(row, col);
@@ -108,35 +109,97 @@ int main(){
 		Scatter for 5 seconds, then Chase for 20 seconds.
 		Scatter for 5 seconds, then switch to Chase mode permanently.
 		 */
-			if (prev = 'n') {
+			if (direction == 'n') {
 				g1_dest = coordToIndex(r_g1 - 1, c_g1, world.getSqrtTiles());
 				backwards = 's';
 			}
-			else if (prev = 's') {
+			 if (direction == 's') {
 				g1_dest = coordToIndex(r_g1 + 1, c_g1, world.getSqrtTiles());
 				backwards = 'n';
 			}
-			else if (prev = 'e') {
+			 if (direction == 'e') {
 				g1_dest = coordToIndex(r_g1, c_g1 + 1, world.getSqrtTiles());
-				backwards='w';
+				backwards = 'w';
 			}
-			else if (prev = 'w') {
+			 if (direction == 'w') {
 				g1_dest = coordToIndex(r_g1, c_g1 - 1, world.getSqrtTiles());
-				backwards ='e';
+				backwards = 'e';
 			}
-			//cout << g1_pos << g1_dest;
+			 //cout << direction << backwards << endl;//DEBUG
+			 //cout << g1.get_dir(); //DEBUG
+			cout << "uncorrected "<<g1_dest<<", "<<direction<<endl;//DEBUG
 			otherpaths=world.wallExists(g1_pos, g1_dest);
-			//for (int i = 0; i < otherpaths.size(); i++)
-				//cout << otherpaths.at(i);
+		
 			//if there is a wall infront, orient to another valid destination
 			if (otherpaths.size() > 1) {
 				g1.rand_dir();
+				//for (int i = 0; i < otherpaths.size(); i++) //DEBUG
+					//cout << otherpaths.at(i) << endl;
 				for (int i = 0; i < otherpaths.size(); i++)
-					if (otherpaths[i] != backwards) //change its direction so its not hitting a wall or going backwards
+					if (otherpaths[i] != backwards) { //change its direction so its not hitting a wall or going backwards
 						g1.set_dir(otherpaths[i]);
+						direction = g1.get_dir();
+
+						if (direction == 'n') 
+							g1_dest = coordToIndex(r_g1 - 1, c_g1, world.getSqrtTiles());
+													
+						 if (direction == 's') 
+							g1_dest = coordToIndex(r_g1 + 1, c_g1, world.getSqrtTiles());	
+						
+						if (direction =='e') 
+							g1_dest = coordToIndex(r_g1, c_g1 + 1, world.getSqrtTiles());
+
+						if (direction == 'w') 
+							g1_dest = coordToIndex(r_g1, c_g1 - 1, world.getSqrtTiles());
+						
+						i = otherpaths.size();
+
+						corrected = true;
+						cout << "corrected " << g1_dest <<","<<direction<<endl;
+						//exit after the first instance
+					}
+				//cout << g1.get_dir() << endl;
+				//cout << backwards << endl;
 			}
+			//make sure it never moves backwards, except for the special tiles (that may be implemented)
+			//if(direction==backwards)
 			
-			g1_pos=g1.move(g1_pos,pacPosOrig, intersects);
+			if (intersects[g1_pos]) {//incase it moves backwards due to intersection, correct it
+				int temppos = g1_pos;
+				g1_pos = g1.move(g1_pos, pacPosOrig, intersects, corrected);
+				if (g1.get_dir() == backwards) {
+
+					if (backwards == 'n') {
+						direction='s';
+						g1.set_dir(direction);
+						g1_pos = g1.move(temppos, pacPosOrig, intersects, true);
+						g1_pos = g1.move(g1_pos, pacPosOrig, intersects, true);
+					}
+
+					if (backwards == 's') {
+						direction = 'n';
+						g1.set_dir(direction);
+						g1_pos = g1.move(temppos, pacPosOrig, intersects, true);
+						g1_pos = g1.move(g1_pos, pacPosOrig, intersects, true);
+					}
+
+					if (backwards == 'e') {
+						direction = 'w';
+						g1.set_dir(direction);
+						g1_pos = g1.move(temppos, pacPosOrig, intersects, true);
+						g1_pos = g1.move(g1_pos, pacPosOrig, intersects, true);
+					}
+
+					if (backwards == 'w') {
+						direction = 'e';
+						g1.set_dir(direction);
+						g1_pos = g1.move(temppos, pacPosOrig, intersects, true);
+						g1_pos = g1.move(g1_pos, pacPosOrig, intersects, true);
+					}
+				}
+			}else
+				g1_pos = g1.move(g1_pos, pacPosOrig, intersects, corrected);
+			direction = g1.get_dir();
 			r_g1 = indexToRownum(g1_pos, world.getSqrtTiles());
 			c_g1 = indexToColnum(g1_pos, world.getSqrtTiles());
 			//update the map
@@ -145,7 +208,7 @@ int main(){
 			memory.setGhostAt(g1_pos, &g1);
 			memory.removeGhostAt(g1_prevpos);
 			g1_prevpos = g1_pos;
-
+			corrected = false;
 
 			if (time == 0 || time == 27 || time == 54 || time == 79)
 				cout << "scattering" << endl;

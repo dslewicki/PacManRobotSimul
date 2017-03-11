@@ -154,9 +154,8 @@ vector<char> Map::validPathsAt(int pos) {
 }
 
 vector<char> Map::wallExists(int pos1, int pos2) {
-	vector<char> paths;
 	vector<Tile*> neighbors;
-
+	//cout << "pos1: "<<pos1 <<"pos2: "<< pos2<<endl; //DEBUG
 	neighbors = tiles.at(pos1).getNeighbors();//get the neighbors for the first tile, and see if there is a connection to pos2
 	//for (int i = 0; i < neighbors.size(); i++)
 		//cout << neighbors.at(i)->getIndex();
@@ -167,11 +166,9 @@ vector<char> Map::wallExists(int pos1, int pos2) {
 	for (int i = 0; i < neighbors.size(); i++) {
 		if (pos2 == neighbors.at(i)->getIndex())
 			return{};//if there is a connection, then return an empty vector to show there is no wall between the two
+	}
 
-		else
-			return validPathsAt(pos1);
-		}
-	return paths;
+	return validPathsAt(pos1);
 }
 
 
