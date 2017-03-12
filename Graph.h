@@ -62,12 +62,14 @@ class Map{
 	void visitNeighbors(int); //designed tile connects to nearby tiles and adds to neighbors list
 	Pellet p;
 	PwrPlt pp;
+	bool intersects[MAP_DIM*MAP_DIM];
 public://the constructor sets up each tile, but does not "connect" them (no neighbors detected)
 	Map(int numOfVertices) :totalTiles(numOfVertices), sqrtOfTiles(sqrt(numOfVertices)) {
 		tiles.reserve(totalTiles);
 		for (int i = 0; i < numOfVertices; i++) {
 			Tile insert(&p, i);
 			tiles.push_back(insert);
+			intersects[i] == false;
 		}			
 	} 
 
@@ -100,5 +102,5 @@ public://the constructor sets up each tile, but does not "connect" them (no neig
 	vector<char> wallExists(int,int);//determines if a wall exists between those two tiles, returns other valid tiles
 	vector<char> validPathsAt(int);//returns all valid paths of a certain tile
 	int wallAhead(Ghost*, int to_pos);//determines if there is a wall ahead and recalculates the route (for ghost right now)
-	int moveGhost(Ghost*);
+	int moveGhost(Ghost*, Pac*, bool);
 };

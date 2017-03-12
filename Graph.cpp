@@ -218,6 +218,42 @@ int Map::wallAhead(Ghost* g, int g_dest){
 	}
 }
 
+int Map::moveGhost(Ghost* g, Pac* p, bool corrected) {
+	int g_pos = coordToIndex(g->get_rowpos(), g->get_colpos(), sqrtOfTiles);
+	int p_pos = coordToIndex(p->get_rowpos(), p->get_colpos(), sqrtOfTiles);
+    //cout << g_pos;
+	if (intersects[g_pos]) {//incase it moves backwards due to intersection, correct it
+		//cout << '\a';
+		int temppos = g_pos;
+		char backwards = g->getBackwards();
+		g_pos = g->move(g_pos, p_pos, intersects, corrected);
+		if (g->get_dir() == backwards) {
+
+			if (backwards == 'n') 
+				g->set_dir('s');			
+
+			if (backwards == 's') 
+				g->set_dir('n');		
+
+			if (backwards == 'e') 
+				g->set_dir('w');
+			
+			if (backwards == 'w') 
+				g->set_dir('e');
+
+			g_pos = g->move(temppos, p_pos, intersects, true);
+			g_pos = g->move(g_pos, p_pos, intersects, true);
+		}
+	}
+	else
+		g_pos = g->move(g_pos, p_pos, intersects, corrected);
+
+	g->set_rowpos(indexToRownum(g_pos, sqrtOfTiles));
+	g->set_colpos(indexToColnum(g_pos, sqrtOfTiles));
+
+	return g_pos;
+}
+
 
 void Map::makeNeighbor(int index, Tile *to_insert, char dir){
 	int r = 0, c = 0;
@@ -423,6 +459,11 @@ void Map::initialize() {
 	makeWall(2, 1, 3, 1);
 	makeWall(3, 2, 3, 3);
 	makeWall(3, 3, 4, 3);
+
+	for (int i = 0; i < totalTiles; i++)
+		if (tiles.at(i).getNeighbors().size() >= 3)
+			intersects[i] = true;
+
 }
 
 //will be returning vector after more details are worked out

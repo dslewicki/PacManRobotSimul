@@ -26,7 +26,7 @@ int main(){
 
 	world.meetNGreet();
 	world.initialize();
-	bool intersects[22];
+	/*bool intersects[22];
 	for (int i = 0; i < 22; i++)
 		intersects[i] = false;
 	intersects[6] = true,
@@ -36,7 +36,7 @@ int main(){
 	intersects[13] = true,
 	intersects[17] = true,
 	intersects[21] = true,
-	intersects[22] = true;
+	intersects[22] = true;*/
 //testing the robot
 	//variables for the controls
 	//sets up the pacbot and the ghostbots locations
@@ -137,8 +137,8 @@ int main(){
 			g1_dest = prev_dest;
 			direction = g1.get_dir();
 			backwards = g1.getBackwards();
-			cout << direction<< endl; //DEBUG
-			cout << backwards<< endl;//DEBUG
+			//cout << direction<< endl; //DEBUG
+			//cout << backwards<< endl;//DEBUG
 			 //cout << "uncorrected "<<g1_dest<<", "<<direction<<endl;//DEBUG
 			/*otherpaths=world.wallExists(g1_pos, g1_dest); //old code
 			//if there is a wall infront, orient to another valid destination
@@ -174,8 +174,13 @@ int main(){
 			}*/
 			//make sure it never moves backwards, except for the special tiles (that may be implemented)
 			
-			
-			if (intersects[g1_pos]) {//incase it moves backwards due to intersection, correct it
+			g1_pos=world.moveGhost(&g1, &pac, corrected);
+			//memory.moveGhost(&g1, &pac, corrected);
+			direction = g1.get_dir();
+			backwards = g1.getBackwards();
+			//cout << direction<< endl; //DEBUG
+			//cout << backwards<< endl;//DEBUG
+		/*	if (intersects[g1_pos]) {//incase it moves backwards due to intersection, correct it
 				int temppos = g1_pos;
 				g1_pos = g1.move(g1_pos, pacPosOrig, intersects, corrected);
 				if (g1.get_dir() == backwards) {
@@ -212,7 +217,7 @@ int main(){
 				g1_pos = g1.move(g1_pos, pacPosOrig, intersects, corrected);
 			direction = g1.get_dir();
 			g1.set_rowpos(indexToRownum(g1_pos, world.getSqrtTiles()));
-			g1.set_colpos(indexToColnum(g1_pos, world.getSqrtTiles()));
+			g1.set_colpos(indexToColnum(g1_pos, world.getSqrtTiles()));*/
 			//update the map
 			world.setGhostAt(g1_pos, &g1);
 			world.removeGhostAt(g1_prevpos);
