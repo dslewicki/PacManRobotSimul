@@ -9,6 +9,9 @@ This was due _getch() returning a prefix of 224, and if you called it again, it 
 02/18/2017
 THON has started and I'm busy doing infinite amounts of work, like adding a buglist and moving some chunks of code like
 making a new look() function from the code in main.cpp to the Map.cpp.
+03/19/2017
+-the code for the actual robot needs to be finished in two weeks, so this probably won't be worked on.
+
 03/11/2017
 -actually decided to use basic oop to streamline code
 -starting work on multiple ghost movement
