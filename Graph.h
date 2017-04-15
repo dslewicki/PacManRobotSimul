@@ -4,6 +4,7 @@
 #include <list>
 #include <iterator>
 #include <string>
+#include <cmath>
 
 using std::map;
 using std::list;
