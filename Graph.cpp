@@ -3,9 +3,10 @@
 #include "coordindex.h"
 #include <ctype.h>
 
-using std::cout;
-using std::endl;
-using std::to_string;
+// using std::cout;
+// using std::endl;
+// using std::to_string;
+using namespace std;
 
 void Tile::setNeighbor(Tile* t, char dir) {
 	int test = tolower(dir);
